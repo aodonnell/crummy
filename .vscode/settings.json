@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "raylib.h": "c"
+        "raylib.h": "c",
+        "raudio.h": "c"
     }
 }

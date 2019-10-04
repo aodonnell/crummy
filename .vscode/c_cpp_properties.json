@@ -4,8 +4,7 @@
             "name": "Mac",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/../raylib/src"
-                
+                "${workspaceFolder}/raylib/src"
             ],
             "defines": [],
             "macFrameworkPath": [],
