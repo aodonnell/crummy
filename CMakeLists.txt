@@ -6,4 +6,6 @@ add_subdirectory(raylib/src)
 
 add_executable(${PROJECT_NAME} src/main.c)
 
+file(COPY assets DESTINATION .)
+
 target_link_libraries(${PROJECT_NAME} raylib)
