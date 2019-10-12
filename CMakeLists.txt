@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.11)
 
 project(crummy)
 
-add_subdirectory(raylib/src)
+add_subdirectory(lib/raylib/src)
+add_subdirectory(lib/flecs)
 
 add_executable(${PROJECT_NAME} src/crummy.c)
 
