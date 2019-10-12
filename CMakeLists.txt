@@ -4,7 +4,7 @@ project(crummy)
 
 add_subdirectory(raylib/src)
 
-add_executable(${PROJECT_NAME} src/main.c)
+add_executable(${PROJECT_NAME} src/crummy.c)
 
 file(COPY assets DESTINATION .)
 

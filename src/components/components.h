@@ -3,14 +3,14 @@
 
 #include "raylib.h"
 
-typedef struct _physicalComponent 
+typedef struct _positional_omponent 
 {
     Vector2 position;
-} PhysicalC;
+} Position;
 
-typedef struct _sprite
+typedef struct _sprite_component
 {
     Texture2D texture;    
-} SpriteC;
+} Sprite;
 
 #endif
