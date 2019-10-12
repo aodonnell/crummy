@@ -3,7 +3,6 @@
 
 #include "raylib.h"
 
-#include <stdint.h>
 
 
 #endif
