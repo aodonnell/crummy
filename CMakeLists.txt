@@ -2,11 +2,21 @@ cmake_minimum_required(VERSION 3.11)
 
 project(crummy)
 
-add_subdirectory(lib/raylib/src)
-add_subdirectory(lib/flecs)
+include_directories(lib/flecs/include)
+include_directories(lib/raylib/src)
 
-add_executable(${PROJECT_NAME} src/crummy.c)
+include_directories(src/entities)
+include_directories(src/components)
+include_directories(src/systems)
+
+file(GLOB SOURCES src/*.c src/entities/*.c src/components/*.c src/systems/*.c)
+
+add_executable(${PROJECT_NAME} src/crummy.c ${SOURCES})
 
 file(COPY assets DESTINATION .)
 
-target_link_libraries(${PROJECT_NAME} raylib)
+find_library(RAYLIB raylib lib)
+target_link_libraries(${PROJECT_NAME} LINK_PUBLIC ${RAYLIB})
+
+find_library(FLECS flecs_static lib)
+target_link_libraries(${PROJECT_NAME} LINK_PUBLIC ${FLECS})
