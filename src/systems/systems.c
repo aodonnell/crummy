@@ -14,10 +14,15 @@ void SpriteRenderer(ecs_rows_t * rows)
 
     for(int i = 0; i < rows->count; i++)
     {
-        DrawTexture(sprites[i].texture, positions[i].x, positions[i].x, WHITE);
+        DrawTexture(sprites[i].texture, positions[i].x, positions[i].y, WHITE);
     }
     
     EndDrawing();
+}
+
+void ControllerMover(ecs_rows_t * rows)
+{
+
 }
 
 void CrummySystemsImport(ecs_world_t * world, int id)
