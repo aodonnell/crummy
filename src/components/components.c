@@ -1,6 +1,6 @@
 #include "components.h"
 
-void CrummyComponentsImport(ecs_world_t * world, int flags)
+void CrummyComponentsImport(ecs_world_t *world, int flags)
 {
     // Declare modules
     ECS_MODULE(world, CrummyComponents);
@@ -9,7 +9,7 @@ void CrummyComponentsImport(ecs_world_t * world, int flags)
     ECS_COMPONENT(world, Position);
     ECS_COMPONENT(world, Velocity);
     ECS_COMPONENT(world, Sprite);
-    
+
     // Register tags
     ECS_TAG(world, Playable);
 

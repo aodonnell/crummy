@@ -5,11 +5,12 @@ project(crummy)
 include_directories(lib/flecs/include)
 include_directories(lib/raylib/src)
 
+include_directories(src/core)
 include_directories(src/entities)
 include_directories(src/components)
 include_directories(src/systems)
 
-file(GLOB SOURCES src/*.c src/entities/*.c src/components/*.c src/systems/*.c)
+file(GLOB SOURCES src/*.c src/entities/*.c src/components/*.c src/systems/*.c src/core/*.c)
 
 add_executable(${PROJECT_NAME} src/crummy.c ${SOURCES})
 

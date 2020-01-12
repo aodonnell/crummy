@@ -5,4 +5,6 @@
 
 #include <stdint.h>
 
+#define ROOT2OVER2 0.7071
+
 #endif

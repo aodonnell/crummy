@@ -10,24 +10,23 @@ typedef struct Vector2 Velocity;
 
 typedef struct _sprite_component
 {
-    Texture2D texture;    
+    Texture2D texture;
 } Sprite;
 
-typedef struct _crummy_components {
+typedef struct _crummy_components
+{
     ECS_DECLARE_COMPONENT(Position);
     ECS_DECLARE_COMPONENT(Velocity);
     ECS_DECLARE_COMPONENT(Sprite);
     ECS_DECLARE_ENTITY(Playable);
-
 } CrummyComponents;
 
-void CrummyComponentsImport(ecs_world_t * world, int flags);
+void CrummyComponentsImport(ecs_world_t *world, int flags);
 
-#define CrummyComponentsImportHandles(handles)\
-    ECS_IMPORT_COMPONENT(handles, Position);\
-    ECS_IMPORT_COMPONENT(handles, Velocity);\
-    ECS_IMPORT_COMPONENT(handles, Sprite);\
+#define CrummyComponentsImportHandles(handles) \
+    ECS_IMPORT_COMPONENT(handles, Position);   \
+    ECS_IMPORT_COMPONENT(handles, Velocity);   \
+    ECS_IMPORT_COMPONENT(handles, Sprite);     \
     ECS_IMPORT_ENTITY(handles, Playable);
-
 
 #endif

@@ -1,8 +1,8 @@
-#include "systems.h"
-
 #include "raylib.h"
 
+#include "core.h"
 #include "components.h"
+#include "systems.h"
 
 void SpriteRenderer(ecs_rows_t * rows)
 {
@@ -16,7 +16,7 @@ void SpriteRenderer(ecs_rows_t * rows)
     {
         /* 
         * TODO maybe add something in the sprite about if it is positioned 
-        * from the center, 
+        * from the center,
         * the corner,
         * or a defined offset anchor
         */
@@ -42,22 +42,27 @@ void Input(ecs_rows_t * rows)
 {
     Velocity * velocities = ecs_column(rows, Velocity, 1);
 
+    bool u = IsKeyDown(KEY_UP);
+    bool d = IsKeyDown(KEY_DOWN);
+    bool l = IsKeyDown(KEY_LEFT);
+    bool r = IsKeyDown(KEY_RIGHT);    
+
     for(int i = 0; i < rows->count; i++)
     {
         // If moving, then move
-        if(IsKeyDown(KEY_UP))
+        if(u)
         {
             velocities[i].y = -1.0;
         }
-        else if(IsKeyDown(KEY_DOWN))
+        else if(d)
         {
             velocities[i].y = 1.0;
         }
-        else if(IsKeyDown(KEY_LEFT))
+        else if(l)
         {
             velocities[i].x = -1.0;
         }
-        else if(IsKeyDown(KEY_RIGHT))
+        else if(r)
         {
             velocities[i].x = 1.0;
         }
