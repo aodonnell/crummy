@@ -14,4 +14,6 @@ int FloatToSnap(float pos);
 
 int RandInRange(int low, int high);
 
+Vector2 Vector2Lerp(Vector2 current, Vector2 target, float by);
+
 #endif

@@ -101,48 +101,55 @@ void Input(ecs_rows_t * rows)
 
     for(int i = 0; i < rows->count; i++)
     {
-        // If moving, then move
+
+        Vector2 targetVelocity = {.x=0, .y=0};
+
         if(u)
         {
-            velocities[i].y = -CRUMB_SIZE;
+            targetVelocity.y = -CRUMB_SIZE;
         }
         else if(u && l)
         {
-            velocities[i].x = -ROOT2OVER2*CRUMB_SIZE;
-            velocities[i].y = -ROOT2OVER2*CRUMB_SIZE;
+            targetVelocity.x = -ROOT2OVER2*CRUMB_SIZE;
+            targetVelocity.y = -ROOT2OVER2*CRUMB_SIZE;
         }
         else if(u && r)
         {
-            velocities[i].x = ROOT2OVER2*CRUMB_SIZE;
-            velocities[i].y = -ROOT2OVER2*CRUMB_SIZE;
+            targetVelocity.x = ROOT2OVER2*CRUMB_SIZE;
+            targetVelocity.y = -ROOT2OVER2*CRUMB_SIZE;
         }
         else if(d)
         {
-            velocities[i].y = CRUMB_SIZE;
+            targetVelocity.y = CRUMB_SIZE;
         }
         else if(d && l)
         {
-            velocities[i].x = -ROOT2OVER2*CRUMB_SIZE;
-            velocities[i].y = ROOT2OVER2*CRUMB_SIZE;
+            targetVelocity.x = -ROOT2OVER2*CRUMB_SIZE;
+            targetVelocity.y = ROOT2OVER2*CRUMB_SIZE;
         }
         else if(d && r)
         {
-            velocities[i].x = ROOT2OVER2*CRUMB_SIZE;
-            velocities[i].y = ROOT2OVER2*CRUMB_SIZE;
+            targetVelocity.x = ROOT2OVER2*CRUMB_SIZE;
+            targetVelocity.y = ROOT2OVER2*CRUMB_SIZE;
         }
         else if(l)
         {
-            velocities[i].x = -CRUMB_SIZE;
+            targetVelocity.x = -CRUMB_SIZE;
         }
         else if(r)
         {
-            velocities[i].x = CRUMB_SIZE;
+            targetVelocity.x = CRUMB_SIZE;
         }
         else
         {
-            velocities[i].x = 0.0;
-            velocities[i].y = 0.0;
+            targetVelocity.x = 0.0;
+            targetVelocity.y = 0.0;
         }
+
+        Vector2 newVelocity = Vector2Lerp(velocities[i], targetVelocity, 0.5);
+
+        velocities[i].x = newVelocity.x;
+        velocities[i].y = newVelocity.y;
     }
 }
 
