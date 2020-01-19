@@ -27,7 +27,6 @@ int main(int argc, char *argv[])
 
     ecs_set_target_fps(world, 60);
 
-
     while (!WindowShouldClose() && ecs_progress(world, 0))
     {
         BeginDrawing();

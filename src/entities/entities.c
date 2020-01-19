@@ -22,16 +22,3 @@ ecs_entity_t SpawnCrumb(ecs_world_t *world, Vector2 position)
 
     return id;
 }
-
-ecs_entity_t SpawnPlayableCrumb(ecs_world_t *world, Vector2 position)
-{
-    ecs_entity_t id = SpawnCrumb(world, position);
-
-    ECS_IMPORT(world, CrummyComponents, 0);
-
-    ecs_set(world, id, Crumb, {.color= PRETTY_IN_PINK});
-
-    ecs_add(world, id, Playable);
-
-    return id;
-}

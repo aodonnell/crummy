@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "raylib.h"
 
@@ -26,6 +27,7 @@ void CrumbRenderer(ecs_rows_t * rows)
 void MouseCrumber(ecs_rows_t * rows)
 {
     Position * positions = ecs_column(rows, Position, 1);
+    Crumb * crumbs = ecs_column(rows, Crumb, 2);
 
     bool rightClicked = IsMouseButtonPressed(MOUSE_RIGHT_BUTTON);
     bool leftClicked = IsMouseButtonDown(MOUSE_LEFT_BUTTON);
@@ -34,19 +36,32 @@ void MouseCrumber(ecs_rows_t * rows)
 
     if(leftClicked)
     {
+        Crumb * hitCrumb = NULL;
+
         for(int i = 0; i < rows->count; i++)
         {
             if(CrumbsHitting(mousePosition, positions[i]))
             {
-                return;
+                hitCrumb = crumbs + i;
+                break;
             }
         }
 
-        SpawnCrumb(rows->world, mousePosition);
+        if(hitCrumb)
+        {
+            // TODO If we hit a crumb, we need to simulate the effects of them colliding
+            Color rand = {RandInRange(0, 0xff), RandInRange(0, 0xff), RandInRange(0, 0xff), 0xff};
+            hitCrumb->color = rand;
+        }
+        else
+        {
+            SpawnCrumb(rows->world, mousePosition);
+        }
+        
     }
 }
 
-void Debugger(ecs_rows_t * rows)
+void DebugHud(ecs_rows_t * rows)
 {
     Position * positions = ecs_column(rows, Position, 1);
     Crumb * crumbs = ecs_column(rows, Crumb, 2);
@@ -58,7 +73,6 @@ void Debugger(ecs_rows_t * rows)
     DrawTextEx(FontAlagard, message, (Vector2){.x=10, .y=5}, 20, 2, CREME);
 
     free(message);
-    // DrawText("Test", 10, 5, 20, CREME);
 }
 
 void Mover(ecs_rows_t * rows)
@@ -139,7 +153,7 @@ void CrummySystemsImport(ecs_world_t * world, int id)
     ECS_SYSTEM(world, Mover, EcsOnUpdate, Position, Velocity);
     ECS_SYSTEM(world, Input, EcsOnUpdate, Velocity, Playable);
     
-    ECS_SYSTEM(world, Debugger, EcsOnUpdate, Position, Crumb);
+    ECS_SYSTEM(world, DebugHud, EcsOnUpdate, Position, Crumb);
     
     ECS_SET_ENTITY(CrumbRenderer);
     ECS_SET_ENTITY(Mover);
