@@ -5,12 +5,12 @@
 
 typedef struct _crummy_systems
 {
-    ECS_DECLARE_ENTITY(CrumbRenderer);
+    ECS_DECLARE_ENTITY(PixelRenderer);
     ECS_DECLARE_ENTITY(Mover);
 } CrummySystems;
 
 #define CrummySystemsImportHandles(handles)     \
-    ECS_IMPORT_ENTITY(handles, CrumbRenderer); \
+    ECS_IMPORT_ENTITY(handles, PixelRenderer); \
     ECS_IMPORT_ENTITY(handles, Mover);
 
 void CrummySystemsImport(ecs_world_t *world, int flags);

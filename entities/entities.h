@@ -4,6 +4,6 @@
 #include "raylib.h"
 #include "flecs.h"
 
-ecs_entity_t SpawnParticle(ecs_world_t *world);
+ecs_entity_t SpawnCowboy(ecs_world_t *world);
 
 #endif

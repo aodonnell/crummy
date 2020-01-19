@@ -4,12 +4,12 @@
 #include "components.h"
 #include "systems.h"
 
-void CrumbRenderer(ecs_rows_t * rows)
+void PixelRenderer(ecs_rows_t * rows)
 {
     Position * positions = ecs_column(rows, Position, 1);
 
     BeginDrawing();
-    ClearBackground(BLACK);
+    ClearBackground(RAYWHITE);
 
     for(int i = 0; i < rows->count; i++)
     {
@@ -71,10 +71,10 @@ void CrummySystemsImport(ecs_world_t * world, int id)
 {
     ECS_MODULE(world, CrummySystems);
 
-    ECS_SYSTEM(world, CrumbRenderer, EcsOnUpdate, Position, Crumb);
+    ECS_SYSTEM(world, PixelRenderer, EcsOnUpdate, Position, Sprite);
     ECS_SYSTEM(world, Mover, EcsOnUpdate, Position, Velocity);
     ECS_SYSTEM(world, Input, EcsOnUpdate, Velocity, Playable);
 
-    ECS_SET_ENTITY(CrumbRenderer);
+    ECS_SET_ENTITY(PixelRendererr);
     ECS_SET_ENTITY(Mover);
 }

@@ -14,12 +14,14 @@ int main(int argc, char *argv[])
 {
     InitWindow(screenWidth, screenHeight, "crummy");
 
+    Texture2D cowboi = LoadTexture("assets/cowboy.png");
+
     ecs_world_t *world = ecs_init();
 
     ECS_IMPORT(world, CrummyComponents, 0);
     ECS_IMPORT(world, CrummySystems, 0);
 
-    SpawnParticle(world);
+    SpawnCowboy(world);
 
     ecs_set_target_fps(world, 60);
 
