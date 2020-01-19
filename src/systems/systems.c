@@ -50,6 +50,8 @@ void MouseCrumber(ecs_rows_t * rows)
         if(hitCrumb)
         {
             // TODO If we hit a crumb, we need to simulate the effects of them colliding
+
+            // Instead of deleting and making another crumb we just alter the one we hit
             Color rand = {RandInRange(0, 0xff), RandInRange(0, 0xff), RandInRange(0, 0xff), 0xff};
             hitCrumb->color = rand;
         }
