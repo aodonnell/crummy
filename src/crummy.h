@@ -4,6 +4,6 @@
 #define WORLD_HEIGHT 512
 #define WORLD_WIDTH 512
 
-#define CRUMBSIZE 4 
+#define CRUMB_SIZE 8 
 
 #endif

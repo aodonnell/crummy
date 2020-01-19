@@ -1,6 +1,7 @@
 #include "raylib.h"
 
 #include "colours.h"
+#include "crummy.h"
 #include "core.h"
 #include "components.h"
 #include "systems.h"
@@ -14,7 +15,10 @@ void CrumbRenderer(ecs_rows_t * rows)
 
     for(int i = 0; i < rows->count; i++)
     {
-        DrawRectangle(positions[i].x, positions[i].y, 4, 4, CREME);
+        int snapx = (int)(positions[i].x - (int)positions[i].x % CRUMB_SIZE);
+        int snapy = (int)(positions[i].y - (int)positions[i].y % CRUMB_SIZE);
+
+        DrawRectangle(snapx, snapy, CRUMB_SIZE, CRUMB_SIZE, CREME);
     }
     
     EndDrawing();
@@ -46,19 +50,19 @@ void Input(ecs_rows_t * rows)
         // If moving, then move
         if(u)
         {
-            velocities[i].y = -1.0;
+            velocities[i].y = -CRUMB_SIZE;
         }
         else if(d)
         {
-            velocities[i].y = 1.0;
+            velocities[i].y = CRUMB_SIZE;
         }
         else if(l)
         {
-            velocities[i].x = -1.0;
+            velocities[i].x = -CRUMB_SIZE;
         }
         else if(r)
         {
-            velocities[i].x = 1.0;
+            velocities[i].x = CRUMB_SIZE;
         }
         else
         {
