@@ -27,7 +27,6 @@ void CrumbRenderer(ecs_rows_t * rows)
 
 void MouseCrumber(ecs_rows_t * rows)
 {
-
     bool rightClicked = IsMouseButtonPressed(MOUSE_RIGHT_BUTTON);
     bool leftClicked = IsMouseButtonDown(MOUSE_LEFT_BUTTON);
 
@@ -96,7 +95,7 @@ void CrummySystemsImport(ecs_world_t * world, int id)
     ECS_SYSTEM(world, Mover, EcsOnUpdate, Position, Velocity);
     ECS_SYSTEM(world, Input, EcsOnUpdate, Velocity, Playable);
     
-    ECS_SYSTEM(world, MouseCrumber, EcsOnUpdate, 0);
+    ECS_SYSTEM(world, MouseCrumber, EcsOnUpdate, Crumb, Position);
 
     ECS_SET_ENTITY(CrumbRenderer);
     ECS_SET_ENTITY(Mover);

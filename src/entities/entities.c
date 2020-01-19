@@ -23,12 +23,8 @@ ecs_entity_t SpawnPlayableCrumb(ecs_world_t *world, Vector2 position)
 
     ECS_IMPORT(world, CrummyComponents, 0);
 
-    Crumb crumb = ecs_get(world, id, Crumb);
-
-    printf("checko");
-
-    crumb.color = PRETTY_IN_PINK;
-
+    ecs_set(world, id, Crumb, {.color= PRETTY_IN_PINK});
+    
     ecs_add(world, id, Playable);
 
     return id;
