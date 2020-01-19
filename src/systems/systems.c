@@ -104,11 +104,7 @@ void Input(ecs_rows_t * rows)
 
         Vector2 targetVelocity = {.x=0, .y=0};
 
-        if(u && !r && !l)
-        {
-            targetVelocity.y = -CRUMB_SIZE;
-        }
-        else if(u && l)
+        if(u && l)
         {
             targetVelocity.x = -ROOT2OVER2*CRUMB_SIZE;
             targetVelocity.y = -ROOT2OVER2*CRUMB_SIZE;
@@ -118,9 +114,9 @@ void Input(ecs_rows_t * rows)
             targetVelocity.x = ROOT2OVER2*CRUMB_SIZE;
             targetVelocity.y = -ROOT2OVER2*CRUMB_SIZE;
         }
-        else if(d && !r && !l)
+        else if(u)
         {
-            targetVelocity.y = CRUMB_SIZE;
+            targetVelocity.y = -CRUMB_SIZE;
         }
         else if(d && l)
         {
@@ -131,6 +127,10 @@ void Input(ecs_rows_t * rows)
         {
             targetVelocity.x = ROOT2OVER2*CRUMB_SIZE;
             targetVelocity.y = ROOT2OVER2*CRUMB_SIZE;
+        }
+        else if(d)
+        {
+            targetVelocity.y = CRUMB_SIZE;
         }
         else if(l)
         {
