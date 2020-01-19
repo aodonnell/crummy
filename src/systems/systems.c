@@ -25,6 +25,42 @@ void CrumbRenderer(ecs_rows_t * rows)
     }
 }
 
+void CrumbSimulator(ecs_rows_t * rows)
+{
+    Position * positions = ecs_column(rows, Position, 1);
+    Velocity * velocities = ecs_column(rows, Velocity, 2);
+    Crumb * crumbs = ecs_column(rows, Crumb, 3);
+
+    bool below, left, right;
+
+    for(int i = 0; i < rows->count; i++)
+    {
+        switch(crumbs[i].type)
+        {
+            case(VoidCrumb):
+                // XXX delete the crumb if it was set to void
+                // kinda like weird garbage collection
+                break;
+            case(SandCrumb):
+
+                below = CrumbsHitting(positions[i], (Position){.x=positions[i].x, .y=positions[i].y+CRUMB_SIZE});
+                left = CrumbsHitting(positions[i], (Position){.x=positions[i].x + CRUMB_SIZE, .y=positions[i].y});
+                right = CrumbsHitting(positions[i], (Position){.x=positions[i].x - CRUMB_SIZE, .y=positions[i].y});
+
+                if(!below)
+                {
+                    velocities[i].x = 0;
+                    velocities[i].y = CRUMB_SIZE/2;
+                }
+
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+
 void MouseCrumber(ecs_rows_t * rows)
 {
     Position * positions = ecs_column(rows, Position, 1);
@@ -43,7 +79,6 @@ void MouseCrumber(ecs_rows_t * rows)
     {
         crumbType = RockCrumb;
     }
-
 
     if(crumbType != VoidCrumb)
     {
@@ -99,9 +134,6 @@ void Mover(ecs_rows_t * rows)
     {
         positions[i].x += velocities[i].x;
         positions[i].y += velocities[i].y;
-
-        // positions[i].x = positions[i].x + FloatToSnap(velocities[i].x);
-        // positions[i].y = positions[i].y + FloatToSnap(velocities[i].y);
     }
 }
 
@@ -174,12 +206,16 @@ void CrummySystemsImport(ecs_world_t * world, int id)
     ECS_MODULE(world, CrummySystems);
 
     ECS_SYSTEM(world, CrumbRenderer, EcsOnUpdate, Position, Crumb);
+    ECS_SYSTEM(world, CrumbSimulator, EcsOnUpdate, Position, Velocity, Crumb);
     ECS_SYSTEM(world, MouseCrumber, EcsOnUpdate, Position, Crumb);
     ECS_SYSTEM(world, Mover, EcsOnUpdate, Position, Velocity);
     ECS_SYSTEM(world, Input, EcsOnUpdate, Velocity, Playable);
     
     ECS_SYSTEM(world, DebugHud, EcsOnUpdate, Position, Crumb);
-    
+
     ECS_SET_ENTITY(CrumbRenderer);
+    ECS_SET_ENTITY(CrumbSimulator);
+    ECS_SET_ENTITY(MouseCrumber);
     ECS_SET_ENTITY(Mover);
+
 }
