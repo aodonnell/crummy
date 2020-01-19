@@ -5,6 +5,7 @@ project(crummy)
 include_directories(lib/flecs/include)
 include_directories(lib/raylib/src)
 
+include_directories(src)
 include_directories(src/core)
 include_directories(src/entities)
 include_directories(src/components)

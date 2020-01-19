@@ -7,12 +7,9 @@
 #include "components/components.h"
 #include "systems/systems.h"
 
-const int screenWidth = 800;
-const int screenHeight = 450;
-
 int main(int argc, char *argv[])
 {
-    InitWindow(screenWidth, screenHeight, "crummy");
+    InitWindow(WORLD_WIDTH, WORLD_HEIGHT, "crummy");
 
     ecs_world_t *world = ecs_init();
 

@@ -1,5 +1,6 @@
 #include "raylib.h"
 
+#include "colours.h"
 #include "core.h"
 #include "components.h"
 #include "systems.h"
@@ -9,11 +10,11 @@ void CrumbRenderer(ecs_rows_t * rows)
     Position * positions = ecs_column(rows, Position, 1);
 
     BeginDrawing();
-    ClearBackground(BLACK);
+    ClearBackground(DUSK);
 
     for(int i = 0; i < rows->count; i++)
     {
-        DrawRectangle(positions[i].x, positions[i].y, 4, 4, WHITE);
+        DrawRectangle(positions[i].x, positions[i].y, 4, 4, CREME);
     }
     
     EndDrawing();
