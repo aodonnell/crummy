@@ -1,11 +1,11 @@
 
-#include "colours.h"
+#include "colors.h"
 #include "core.h"
 #include "entities.h"
 #include "components.h"
 #include "systems.h"
 
-ecs_entity_t SpawnCrumb(ecs_world_t *world, Vector2 position)
+ecs_entity_t SpawnCrumb(ecs_world_t *world, Vector2 position, CrumbType type)
 {
     ecs_entity_t id = ecs_new(world, 0);
 
@@ -16,7 +16,7 @@ ecs_entity_t SpawnCrumb(ecs_world_t *world, Vector2 position)
 
     Color rand = {RandInRange(0, 0xff), RandInRange(0, 0xff), RandInRange(0, 0xff), 0xff};
 
-    ecs_set(world, id, Crumb, {.color = rand});
+    ecs_set(world, id, Crumb, {.type = type});
 
     ecs_add(world, id, Playable);
 

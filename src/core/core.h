@@ -2,11 +2,30 @@
 #define _CORE_H
 
 #include "handling.h"
-#include "components.h"
+
+#include "colors.h"
+#include "raylib.h"
 
 #include <stdint.h>
 
 #define ROOT2OVER2 0.7071
+
+typedef struct Vector2 Position;
+
+typedef struct Vector2 Velocity;
+
+typedef enum _crumb_type
+{
+    RockCrumb,
+    SandCrumb,
+} CrumbType;
+
+typedef struct _crumb 
+{
+    CrumbType type;
+} Crumb;
+
+extern Color CrumbColorLookup[];
 
 bool CrumbsHitting(Position crumba, Position crumbb);
 

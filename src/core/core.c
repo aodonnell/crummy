@@ -30,3 +30,12 @@ int RandInRange(int low, int high)
 {
     return (rand() % (high - low + 1)) + low; 
 }
+
+Color CrumbColorLookup[] = 
+{
+    // Rock
+    PRETTY_IN_PINK,
+    
+    // Sand
+    CREME,
+};

@@ -1,5 +1,5 @@
-#ifndef _COULOURS_H
-#define _COULOURS_H
+#ifndef _COULORS_H
+#define _COULORS_H
 
 // 10%
 #define DUSK CLITERAL(Color){ 0x28, 0x2a, 0x33, 255 }   

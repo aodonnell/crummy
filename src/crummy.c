@@ -3,11 +3,13 @@
 
 #include "crummy.h"
 
+#include "colors.h"
 
-#include "colours.h"
-#include "entities/entities.h"
-#include "components/components.h"
-#include "systems/systems.h"
+#include "core.h"
+
+#include "entities.h"
+#include "components.h"
+#include "systems.h"
 
 int main(int argc, char *argv[])
 {
@@ -21,9 +23,9 @@ int main(int argc, char *argv[])
     ECS_IMPORT(world, CrummySystems, 0);
 
     // SpawnPlayableCrumb(world, (Vector2){100, 100});
-    SpawnCrumb(world, (Vector2){200, 200});
-    SpawnCrumb(world, (Vector2){300, 300});
-    SpawnCrumb(world, (Vector2){400, 400});
+    SpawnCrumb(world, (Vector2){200, 200}, RockCrumb);
+    SpawnCrumb(world, (Vector2){300, 300}, RockCrumb);
+    SpawnCrumb(world, (Vector2){400, 400}, RockCrumb);
 
     ecs_set_target_fps(world, 60);
 

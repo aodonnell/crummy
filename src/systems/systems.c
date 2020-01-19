@@ -3,12 +3,13 @@
 
 #include "raylib.h"
 
-#include "colours.h"
+#include "colors.h"
 #include "crummy.h"
+
 #include "core.h"
-#include "components.h"
-#include "entities.h"
+
 #include "systems.h"
+#include "entities.h"
 
 void CrumbRenderer(ecs_rows_t * rows)
 {
@@ -20,7 +21,7 @@ void CrumbRenderer(ecs_rows_t * rows)
         int snapx = FloatToSnap(positions[i].x);
         int snapy = FloatToSnap(positions[i].y);
 
-        DrawRectangle(snapx, snapy, CRUMB_SIZE, CRUMB_SIZE, crumbs[i].color);
+        DrawRectangle(snapx, snapy, CRUMB_SIZE, CRUMB_SIZE, CrumbColorLookup[crumbs[i].type]);
     }
 }
 
@@ -53,11 +54,11 @@ void MouseCrumber(ecs_rows_t * rows)
 
             // Instead of deleting and making another crumb we just alter the one we hit
             Color rand = {RandInRange(0, 0xff), RandInRange(0, 0xff), RandInRange(0, 0xff), 0xff};
-            hitCrumb->color = rand;
+            hitCrumb->type = SandCrumb;
         }
         else
         {
-            SpawnCrumb(rows->world, mousePosition);
+            SpawnCrumb(rows->world, mousePosition, RockCrumb);
         }
         
     }
