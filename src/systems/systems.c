@@ -1,27 +1,43 @@
+#include <stdio.h>
+
 #include "raylib.h"
 
 #include "colours.h"
 #include "crummy.h"
 #include "core.h"
 #include "components.h"
+#include "entities.h"
 #include "systems.h"
 
 void CrumbRenderer(ecs_rows_t * rows)
 {
     Position * positions = ecs_column(rows, Position, 1);
-
-    BeginDrawing();
-    ClearBackground(DUSK);
+    Crumb * crumbs = ecs_column(rows, Crumb, 2);
 
     for(int i = 0; i < rows->count; i++)
     {
         int snapx = (int)(positions[i].x - (int)positions[i].x % CRUMB_SIZE);
         int snapy = (int)(positions[i].y - (int)positions[i].y % CRUMB_SIZE);
 
-        DrawRectangle(snapx, snapy, CRUMB_SIZE, CRUMB_SIZE, CREME);
+        DrawRectangle(snapx, snapy, CRUMB_SIZE, CRUMB_SIZE, crumbs[i].color);
+    }    
+}
+
+void MouseCrumber(ecs_rows_t * rows)
+{
+
+    bool rightClicked = IsMouseButtonPressed(MOUSE_RIGHT_BUTTON);
+    bool leftClicked = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
+
+    Vector2 mousePosition = GetMousePosition();
+
+    // printf("Mouse at x: %.2f, y: %.2f\n", mousePosition.x, mousePosition.y);
+
+    if(leftClicked)
+    {
+        SpawnCrumb(rows->world, mousePosition);
+        printf("Spawned crumb at x: %.2f, y: %.2f", mousePosition.x, mousePosition.y);
     }
-    
-    EndDrawing();
 }
 
 void Mover(ecs_rows_t * rows)
@@ -38,6 +54,7 @@ void Mover(ecs_rows_t * rows)
 
 void Input(ecs_rows_t * rows)
 {
+    // XXX this is only going to be for debugging but the movement should be based more on changing the direction in terms of where the movement vector should point in the same direction of the face of the playable entitiy 
     Velocity * velocities = ecs_column(rows, Velocity, 1);
 
     bool u = IsKeyDown(KEY_UP);
@@ -79,6 +96,7 @@ void CrummySystemsImport(ecs_world_t * world, int id)
     ECS_SYSTEM(world, CrumbRenderer, EcsOnUpdate, Position, Crumb);
     ECS_SYSTEM(world, Mover, EcsOnUpdate, Position, Velocity);
     ECS_SYSTEM(world, Input, EcsOnUpdate, Velocity, Playable);
+    ECS_SYSTEM(world, MouseCrumber, EcsOnUpdate, 0);
 
     ECS_SET_ENTITY(CrumbRenderer);
     ECS_SET_ENTITY(Mover);

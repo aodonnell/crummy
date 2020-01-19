@@ -10,7 +10,7 @@ typedef struct _crummy_systems
 } CrummySystems;
 
 #define CrummySystemsImportHandles(handles)     \
-    ECS_IMPORT_ENTITY(handles, CrumbRenderer); \
+    ECS_IMPORT_ENTITY(handles, CrumbRenderer);  \
     ECS_IMPORT_ENTITY(handles, Mover);
 
 void CrummySystemsImport(ecs_world_t *world, int flags);
