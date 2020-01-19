@@ -146,10 +146,10 @@ void Input(ecs_rows_t * rows)
             targetVelocity.y = 0.0;
         }
 
-        Vector2 newVelocity = Vector2Lerp(velocities[i], targetVelocity, 0.5);
+        targetVelocity = Vector2Lerp(velocities[i], targetVelocity, 0.5);
 
-        velocities[i].x = newVelocity.x;
-        velocities[i].y = newVelocity.y;
+        velocities[i].x = targetVelocity.x;
+        velocities[i].y = targetVelocity.y;
     }
 }
 
