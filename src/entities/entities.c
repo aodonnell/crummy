@@ -6,8 +6,6 @@
 
 ecs_entity_t SpawnCrumb(ecs_world_t *world, Vector2 position)
 {
-    printf("any old crum");
-
     ecs_entity_t id = ecs_new(world, 0);
 
     ECS_IMPORT(world, CrummyComponents, 0);
@@ -24,6 +22,12 @@ ecs_entity_t SpawnPlayableCrumb(ecs_world_t *world, Vector2 position)
     ecs_entity_t id = SpawnCrumb(world, position);
 
     ECS_IMPORT(world, CrummyComponents, 0);
+
+    Crumb crumb = ecs_get(world, id, Crumb);
+
+    printf("checko");
+
+    crumb.color = PRETTY_IN_PINK;
 
     ecs_add(world, id, Playable);
 

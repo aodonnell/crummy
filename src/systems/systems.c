@@ -20,23 +20,22 @@ void CrumbRenderer(ecs_rows_t * rows)
         int snapy = (int)(positions[i].y - (int)positions[i].y % CRUMB_SIZE);
 
         DrawRectangle(snapx, snapy, CRUMB_SIZE, CRUMB_SIZE, crumbs[i].color);
-    }    
+    }
+
+    printf("%d crumbs drawn\n", rows->count);    
 }
 
 void MouseCrumber(ecs_rows_t * rows)
 {
 
     bool rightClicked = IsMouseButtonPressed(MOUSE_RIGHT_BUTTON);
-    bool leftClicked = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
+    bool leftClicked = IsMouseButtonDown(MOUSE_LEFT_BUTTON);
 
     Vector2 mousePosition = GetMousePosition();
-
-    // printf("Mouse at x: %.2f, y: %.2f\n", mousePosition.x, mousePosition.y);
 
     if(leftClicked)
     {
         SpawnCrumb(rows->world, mousePosition);
-        printf("Spawned crumb at x: %.2f, y: %.2f", mousePosition.x, mousePosition.y);
     }
 }
 
@@ -96,6 +95,7 @@ void CrummySystemsImport(ecs_world_t * world, int id)
     ECS_SYSTEM(world, CrumbRenderer, EcsOnUpdate, Position, Crumb);
     ECS_SYSTEM(world, Mover, EcsOnUpdate, Position, Velocity);
     ECS_SYSTEM(world, Input, EcsOnUpdate, Velocity, Playable);
+    
     ECS_SYSTEM(world, MouseCrumber, EcsOnUpdate, 0);
 
     ECS_SET_ENTITY(CrumbRenderer);
