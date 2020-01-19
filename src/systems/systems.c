@@ -104,7 +104,7 @@ void Input(ecs_rows_t * rows)
 
         Vector2 targetVelocity = {.x=0, .y=0};
 
-        if(u)
+        if(u && !r && !l)
         {
             targetVelocity.y = -CRUMB_SIZE;
         }
@@ -118,7 +118,7 @@ void Input(ecs_rows_t * rows)
             targetVelocity.x = ROOT2OVER2*CRUMB_SIZE;
             targetVelocity.y = -ROOT2OVER2*CRUMB_SIZE;
         }
-        else if(d)
+        else if(d && !r && !l)
         {
             targetVelocity.y = CRUMB_SIZE;
         }
