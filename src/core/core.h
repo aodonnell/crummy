@@ -16,6 +16,7 @@ typedef struct Vector2 Velocity;
 
 typedef enum _crumb_type
 {
+    VoidCrumb,
     RockCrumb,
     SandCrumb,
 } CrumbType;

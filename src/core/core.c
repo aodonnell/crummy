@@ -33,6 +33,9 @@ int RandInRange(int low, int high)
 
 Color CrumbColorLookup[] = 
 {
+    // Void
+    DUSK,
+
     // Rock
     PRETTY_IN_PINK,
     

@@ -30,13 +30,25 @@ void MouseCrumber(ecs_rows_t * rows)
     Position * positions = ecs_column(rows, Position, 1);
     Crumb * crumbs = ecs_column(rows, Crumb, 2);
 
-    bool rightClicked = IsMouseButtonPressed(MOUSE_RIGHT_BUTTON);
-    bool leftClicked = IsMouseButtonDown(MOUSE_LEFT_BUTTON);
+    bool rightDown = IsMouseButtonDown(MOUSE_RIGHT_BUTTON);
+    bool leftDown = IsMouseButtonDown(MOUSE_LEFT_BUTTON);
 
-    Vector2 mousePosition = GetMousePosition();
+    CrumbType crumbType = VoidCrumb;
 
-    if(leftClicked)
+    if(rightDown && !leftDown)
     {
+        crumbType = SandCrumb;
+    }
+    else if(!rightDown && leftDown)
+    {
+        crumbType = RockCrumb;
+    }
+
+
+    if(crumbType != VoidCrumb)
+    {
+        Vector2 mousePosition = GetMousePosition();
+
         Crumb * hitCrumb = NULL;
 
         for(int i = 0; i < rows->count; i++)
@@ -54,11 +66,11 @@ void MouseCrumber(ecs_rows_t * rows)
 
             // Instead of deleting and making another crumb we just alter the one we hit
             Color rand = {RandInRange(0, 0xff), RandInRange(0, 0xff), RandInRange(0, 0xff), 0xff};
-            hitCrumb->type = SandCrumb;
+            hitCrumb->type = crumbType;
         }
         else
         {
-            SpawnCrumb(rows->world, mousePosition, RockCrumb);
+            SpawnCrumb(rows->world, mousePosition, crumbType);
         }
         
     }
