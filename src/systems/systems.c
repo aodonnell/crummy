@@ -47,7 +47,7 @@ void MouseCrumber(ecs_rows_t * rows)
 
     if(crumbType != VoidCrumb)
     {
-        Vector2 mousePosition = GetMousePosition();
+        Vector2 mousePosition = Vector2ToSnap(GetMousePosition());
 
         Crumb * hitCrumb = NULL;
 
@@ -97,8 +97,11 @@ void Mover(ecs_rows_t * rows)
 
     for (int i = 0; i < rows->count; i++)
     {
-       positions[i].x += velocities[i].x;
-       positions[i].y += velocities[i].y;
+        positions[i].x += velocities[i].x;
+        positions[i].y += velocities[i].y;
+
+        // positions[i].x = positions[i].x + FloatToSnap(velocities[i].x);
+        // positions[i].y = positions[i].y + FloatToSnap(velocities[i].y);
     }
 }
 

@@ -31,6 +31,7 @@ extern Color CrumbColorLookup[];
 bool CrumbsHitting(Position crumba, Position crumbb);
 
 int FloatToSnap(float pos);
+Vector2 Vector2ToSnap(Vector2 pos);
 
 int RandInRange(int low, int high);
 

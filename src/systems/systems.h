@@ -6,12 +6,14 @@
 typedef struct _crummy_systems
 {
     ECS_DECLARE_ENTITY(CrumbRenderer);
+    ECS_DECLARE_ENTITY(CrumSimulator);
     ECS_DECLARE_ENTITY(DebugHud);
     ECS_DECLARE_ENTITY(Mover);
 } CrummySystems;
 
 #define CrummySystemsImportHandles(handles)     \
     ECS_IMPORT_ENTITY(handles, CrumbRenderer);  \
+    ECS_IMPORT_ENTITY(handles, CrumSimulator);  \
     ECS_IMPORT_ENTITY(handles, DebugHud);       \
     ECS_IMPORT_ENTITY(handles, Mover);
 

@@ -26,6 +26,14 @@ int FloatToSnap(float pos)
     return (int)(pos - (int)pos % CRUMB_SIZE);
 }
 
+Vector2 Vector2ToSnap(Vector2 pos)
+{
+    pos.x = FloatToSnap(pos.x);
+    pos.y = FloatToSnap(pos.y);
+
+    return pos;
+}
+
 int RandInRange(int low, int high)
 {
     return (rand() % (high - low + 1)) + low; 
