@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     ECS_IMPORT(world, CrummyComponents, 0);
     ECS_IMPORT(world, CrummySystems, 0);
 
-    SpawnParticle(world);
+    SpawnCrumb(world);
 
     ecs_set_target_fps(world, 60);
 
