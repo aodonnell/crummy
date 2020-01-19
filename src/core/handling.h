@@ -1,3 +1,6 @@
+#ifndef _HANDLING_H
+#define _HANDLING_H
+
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
@@ -14,3 +17,5 @@
         LogError(M, ##__VA_ARGS__); \
         assert(A);                  \
     }
+
+#endif

@@ -6,6 +6,4 @@
 
 ecs_entity_t SpawnCrumb(ecs_world_t *world, Vector2 position);
 
-ecs_entity_t SpawnPlayableCrumb(ecs_world_t *world, Vector2 position);
-
 #endif

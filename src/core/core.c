@@ -17,17 +17,8 @@ bool CrumbsHitting(Position crumba, Position crumbb)
     int asnapy = FloatToSnap(crumba.y);
     int bsnapx = FloatToSnap(crumbb.x);
     int bsnapy = FloatToSnap(crumbb.y);
-
-
-    bool hit = (asnapx == bsnapx && asnapy == bsnapy);
-
-    if(hit)
-    {
-        printf("crumb at: %d, %d on %d, %d\n", asnapx, asnapy, bsnapx, bsnapy);
-    }
-
+    
     return (asnapx == bsnapx && asnapy == bsnapy);
-
 }
 
 int FloatToSnap(float pos)

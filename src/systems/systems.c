@@ -21,8 +21,6 @@ void CrumbRenderer(ecs_rows_t * rows)
 
         DrawRectangle(snapx, snapy, CRUMB_SIZE, CRUMB_SIZE, crumbs[i].color);
     }
-
-    printf("%d crumbs drawn\n", rows->count);    
 }
 
 void MouseCrumber(ecs_rows_t * rows)
@@ -34,18 +32,33 @@ void MouseCrumber(ecs_rows_t * rows)
 
     Vector2 mousePosition = GetMousePosition();
 
-    for(int i = 0; i < rows->count; i++)
-    {
-        if(CrumbsHitting(mousePosition, positions[i]))
-        {
-            return;
-        }
-    }
-
     if(leftClicked)
     {
+        for(int i = 0; i < rows->count; i++)
+        {
+            if(CrumbsHitting(mousePosition, positions[i]))
+            {
+                return;
+            }
+        }
+
         SpawnCrumb(rows->world, mousePosition);
     }
+}
+
+void Debugger(ecs_rows_t * rows)
+{
+    Position * positions = ecs_column(rows, Position, 1);
+    Crumb * crumbs = ecs_column(rows, Crumb, 2);
+
+    char * message;
+
+    asprintf(&message, "Crumb count: %d", rows->count);
+
+    DrawTextEx(FontAlagard, message, (Vector2){.x=10, .y=5}, 20, 2, CREME);
+
+    free(message);
+    // DrawText("Test", 10, 5, 20, CREME);
 }
 
 void Mover(ecs_rows_t * rows)
@@ -126,7 +139,8 @@ void CrummySystemsImport(ecs_world_t * world, int id)
     ECS_SYSTEM(world, Mover, EcsOnUpdate, Position, Velocity);
     ECS_SYSTEM(world, Input, EcsOnUpdate, Velocity, Playable);
     
-
+    ECS_SYSTEM(world, Debugger, EcsOnUpdate, Position, Crumb);
+    
     ECS_SET_ENTITY(CrumbRenderer);
     ECS_SET_ENTITY(Mover);
 }
