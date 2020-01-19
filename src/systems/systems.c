@@ -16,8 +16,8 @@ void CrumbRenderer(ecs_rows_t * rows)
 
     for(int i = 0; i < rows->count; i++)
     {
-        int snapx = (int)(positions[i].x - (int)positions[i].x % CRUMB_SIZE);
-        int snapy = (int)(positions[i].y - (int)positions[i].y % CRUMB_SIZE);
+        int snapx = FloatToSnap(positions[i].x);
+        int snapy = FloatToSnap(positions[i].y);
 
         DrawRectangle(snapx, snapy, CRUMB_SIZE, CRUMB_SIZE, crumbs[i].color);
     }
@@ -27,10 +27,20 @@ void CrumbRenderer(ecs_rows_t * rows)
 
 void MouseCrumber(ecs_rows_t * rows)
 {
+    Position * positions = ecs_column(rows, Position, 1);
+
     bool rightClicked = IsMouseButtonPressed(MOUSE_RIGHT_BUTTON);
     bool leftClicked = IsMouseButtonDown(MOUSE_LEFT_BUTTON);
 
     Vector2 mousePosition = GetMousePosition();
+
+    for(int i = 0; i < rows->count; i++)
+    {
+        if(CrumbsHitting(mousePosition, positions[i]))
+        {
+            return;
+        }
+    }
 
     if(leftClicked)
     {
@@ -67,9 +77,29 @@ void Input(ecs_rows_t * rows)
         {
             velocities[i].y = -CRUMB_SIZE;
         }
+        else if(u && l)
+        {
+            velocities[i].x = -ROOT2OVER2*CRUMB_SIZE;
+            velocities[i].y = -ROOT2OVER2*CRUMB_SIZE;
+        }
+        else if(u && r)
+        {
+            velocities[i].x = ROOT2OVER2*CRUMB_SIZE;
+            velocities[i].y = -ROOT2OVER2*CRUMB_SIZE;
+        }
         else if(d)
         {
             velocities[i].y = CRUMB_SIZE;
+        }
+        else if(d && l)
+        {
+            velocities[i].x = -ROOT2OVER2*CRUMB_SIZE;
+            velocities[i].y = ROOT2OVER2*CRUMB_SIZE;
+        }
+        else if(d && r)
+        {
+            velocities[i].x = ROOT2OVER2*CRUMB_SIZE;
+            velocities[i].y = ROOT2OVER2*CRUMB_SIZE;
         }
         else if(l)
         {
@@ -92,10 +122,10 @@ void CrummySystemsImport(ecs_world_t * world, int id)
     ECS_MODULE(world, CrummySystems);
 
     ECS_SYSTEM(world, CrumbRenderer, EcsOnUpdate, Position, Crumb);
+    ECS_SYSTEM(world, MouseCrumber, EcsOnUpdate, Position, Crumb);
     ECS_SYSTEM(world, Mover, EcsOnUpdate, Position, Velocity);
     ECS_SYSTEM(world, Input, EcsOnUpdate, Velocity, Playable);
     
-    ECS_SYSTEM(world, MouseCrumber, EcsOnUpdate, Crumb, Position);
 
     ECS_SET_ENTITY(CrumbRenderer);
     ECS_SET_ENTITY(Mover);
