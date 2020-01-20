@@ -2,6 +2,7 @@
 Crummy is a pixel physics simulator created with flecs and raylib. This project started out with my crummy attitude regarding object oriented programming.
 
 <p align="center"><img src="https://github.com/alexjodonnell/crummy/blob/master/docs/paradise.gif" width="514" height="534" /></p>
+(this gif has a reduced framerate)
 
 ## Goals
 The goal of this project is to experiment with data driven programming for game development.
