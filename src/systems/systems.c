@@ -37,28 +37,50 @@ void CrumbSimulator(ecs_rows_t * rows)
     Velocity * velocities = ecs_column(rows, Velocity, 2);
     Crumb * crumbs = ecs_column(rows, Crumb, 3);
 
-    bool below, left, right;
+    bool n, ne, e, se, s, sw, w, nw;
 
-    Vector2 ;
+    float baseSpeed = CRUMB_SIZE/2;
 
     for(int i = 0; i < rows->count; i++)
     {
         switch(crumbs[i].type)
         {
             case VoidCrumb:
-                // XXX delete the crumb if it was set to void
+                // XXX delete the crumb if it was set to void?
                 // kinda like weird garbage collection
                 break;
             case SandCrumb:
 
-                // below = ;
-                // left = CrumbsHitting(positions[i], (Position){.x=positions[i].x + CRUMB_SIZE, .y=positions[i].y});
-                // right = CrumbsHitting(positions[i], (Position){.x=positions[i].x - CRUMB_SIZE, .y=positions[i].y});
+                s = CrumbAt((Position){.x=positions[i].x, .y=positions[i].y + CRUMB_SIZE}) < 0;
+                sw = CrumbAt((Position){.x=positions[i].x - CRUMB_SIZE, .y=positions[i].y + CRUMB_SIZE}) < 0;
+                sw &= CrumbAt((Position){.x=positions[i].x - CRUMB_SIZE, .y=positions[i].y}) < 0;
+                se = CrumbAt((Position){.x=positions[i].x + CRUMB_SIZE, .y=positions[i].y + CRUMB_SIZE}) < 0;
+                se &= CrumbAt((Position){.x=positions[i].x + CRUMB_SIZE, .y=positions[i].y}) < 0;
 
-                if(!below)
+                if(s)
                 {
                     velocities[i].x = 0;
-                    velocities[i].y = CRUMB_SIZE/2;
+                    velocities[i].y = baseSpeed;
+                }
+                else if(sw && se && rand() > 0.5)
+                {
+                    velocities[i].x = -ROOT2OVER2*baseSpeed;
+                    velocities[i].y = ROOT2OVER2*baseSpeed;
+                }
+                else if(se)
+                {
+                        velocities[i].x = ROOT2OVER2*baseSpeed;
+                        velocities[i].y = ROOT2OVER2*baseSpeed;
+                }
+                else if(sw)
+                {
+                    velocities[i].x = -ROOT2OVER2*baseSpeed;
+                    velocities[i].y = ROOT2OVER2*baseSpeed;
+                }
+                else
+                {
+                    velocities[i].x = 0; 
+                    velocities[i].y = 0;
                 }
 
                 break;
