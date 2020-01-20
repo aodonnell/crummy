@@ -13,16 +13,16 @@
 #include "entities.h"
 #include "components.h"
 
-// xxx no safety
-#define MIN(a,b) (((a)<(b))?(a):(b))
-#define MAX(a,b) (((a)>(b))?(a):(b))
+// xxx no type safety
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
-void CrumbRenderer(ecs_rows_t * rows)
+void CrumbRenderer(ecs_rows_t *rows)
 {
-    Position * positions = ecs_column(rows, Position, 1);
-    Crumb * crumbs = ecs_column(rows, Crumb, 2);
+    Position *positions = ecs_column(rows, Position, 1);
+    Crumb *crumbs = ecs_column(rows, Crumb, 2);
 
-    for(int i = 0; i < rows->count; i++)
+    for (int i = 0; i < rows->count; i++)
     {
         int snapx = FloatToSnap(positions[i].x);
         int snapy = FloatToSnap(positions[i].y);
@@ -31,99 +31,97 @@ void CrumbRenderer(ecs_rows_t * rows)
     }
 }
 
-void CrumbSimulator(ecs_rows_t * rows)
+void CrumbSimulator(ecs_rows_t *rows)
 {
-    Position * positions = ecs_column(rows, Position, 1);
-    Velocity * velocities = ecs_column(rows, Velocity, 2);
-    Crumb * crumbs = ecs_column(rows, Crumb, 3);
+    Position *positions = ecs_column(rows, Position, 1);
+    Velocity *velocities = ecs_column(rows, Velocity, 2);
+    Crumb *crumbs = ecs_column(rows, Crumb, 3);
 
     bool n, ne, e, se, s, sw, w, nw;
 
-    float baseSpeed = CRUMB_SIZE/2;
+    float baseSpeed = CRUMB_SIZE / 2;
 
-    for(int i = 0; i < rows->count; i++)
+    for (int i = 0; i < rows->count; i++)
     {
-        switch(crumbs[i].type)
+        switch (crumbs[i].type)
         {
-            case VoidCrumb:
-                // XXX delete the crumb if it was set to void?
-                // kinda like weird garbage collection
-                break;
-            case SandCrumb:
+        case VoidCrumb:
+            // XXX delete the crumb if it was set to void?
+            break;
+        case SandCrumb:
 
-                s = CrumbAt((Position){.x=positions[i].x, .y=positions[i].y + CRUMB_SIZE}) < 0;
-                sw = CrumbAt((Position){.x=positions[i].x - CRUMB_SIZE, .y=positions[i].y + CRUMB_SIZE}) < 0;
-                sw &= CrumbAt((Position){.x=positions[i].x - CRUMB_SIZE, .y=positions[i].y}) < 0;
-                se = CrumbAt((Position){.x=positions[i].x + CRUMB_SIZE, .y=positions[i].y + CRUMB_SIZE}) < 0;
-                se &= CrumbAt((Position){.x=positions[i].x + CRUMB_SIZE, .y=positions[i].y}) < 0;
+            s = CrumbAt((Position){.x = positions[i].x, .y = positions[i].y + CRUMB_SIZE}) < 0;
+            sw = CrumbAt((Position){.x = positions[i].x - CRUMB_SIZE, .y = positions[i].y + CRUMB_SIZE}) < 0;
+            sw &= CrumbAt((Position){.x = positions[i].x - CRUMB_SIZE, .y = positions[i].y}) < 0;
+            se = CrumbAt((Position){.x = positions[i].x + CRUMB_SIZE, .y = positions[i].y + CRUMB_SIZE}) < 0;
+            se &= CrumbAt((Position){.x = positions[i].x + CRUMB_SIZE, .y = positions[i].y}) < 0;
 
-                if(s)
-                {
-                    velocities[i].x = 0;
-                    velocities[i].y = baseSpeed;
-                }
-                else if(sw && se && rand() > 0.5)
-                {
-                    velocities[i].x = -ROOT2OVER2*baseSpeed;
-                    velocities[i].y = ROOT2OVER2*baseSpeed;
-                }
-                else if(se)
-                {
-                        velocities[i].x = ROOT2OVER2*baseSpeed;
-                        velocities[i].y = ROOT2OVER2*baseSpeed;
-                }
-                else if(sw)
-                {
-                    velocities[i].x = -ROOT2OVER2*baseSpeed;
-                    velocities[i].y = ROOT2OVER2*baseSpeed;
-                }
-                else
-                {
-                    velocities[i].x = 0; 
-                    velocities[i].y = 0;
-                }
+            if (s)
+            {
+                velocities[i].x = 0;
+                velocities[i].y = baseSpeed;
+            }
+            else if (sw && se && rand() > 0.5)
+            {
+                velocities[i].x = -ROOT2OVER2 * baseSpeed;
+                velocities[i].y = ROOT2OVER2 * baseSpeed;
+            }
+            else if (se)
+            {
+                velocities[i].x = ROOT2OVER2 * baseSpeed;
+                velocities[i].y = ROOT2OVER2 * baseSpeed;
+            }
+            else if (sw)
+            {
+                velocities[i].x = -ROOT2OVER2 * baseSpeed;
+                velocities[i].y = ROOT2OVER2 * baseSpeed;
+            }
+            else
+            {
+                velocities[i].x = 0;
+                velocities[i].y = 0;
+            }
 
-                break;
-            default:
-                break;
+            break;
+        default:
+            break;
         }
     }
 }
 
-
-void MouseCrumber(ecs_rows_t * rows)
+void MouseCrumber(ecs_rows_t *rows)
 {
-    Position * positions = ecs_column(rows, Position, 1);
-    Crumb * crumbs = ecs_column(rows, Crumb, 2);
+    Position *positions = ecs_column(rows, Position, 1);
+    Crumb *crumbs = ecs_column(rows, Crumb, 2);
 
     bool rightDown = IsMouseButtonDown(MOUSE_RIGHT_BUTTON);
     bool leftDown = IsMouseButtonDown(MOUSE_LEFT_BUTTON);
 
     CrumbType crumbType = VoidCrumb;
 
-    if(rightDown && !leftDown)
+    if (rightDown && !leftDown)
     {
         crumbType = SandCrumb;
     }
-    else if(!rightDown && leftDown)
+    else if (!rightDown && leftDown)
     {
         crumbType = RockCrumb;
     }
 
-    if(crumbType != VoidCrumb)
+    if (crumbType != VoidCrumb)
     {
         Vector2 mousePosition = Vector2ToSnap(GetMousePosition());
 
-        Crumb * hitCrumb = NULL;
+        Crumb *hitCrumb = NULL;
 
         int crumb = CrumbAt(mousePosition);
 
-        if(crumb > 0)
+        if (crumb > 0)
         {
             hitCrumb = &crumbs[crumb];
         }
 
-        if(hitCrumb)
+        if (hitCrumb)
         {
             // TODO If we hit a crumb, we need to simulate the effects of them colliding
 
@@ -135,28 +133,27 @@ void MouseCrumber(ecs_rows_t * rows)
         {
             SpawnCrumb(rows->world, mousePosition, crumbType);
         }
-        
     }
 }
 
-void DebugHud(ecs_rows_t * rows)
+void DebugHud(ecs_rows_t *rows)
 {
-    Position * positions = ecs_column(rows, Position, 1);
-    Crumb * crumbs = ecs_column(rows, Crumb, 2);
+    Position *positions = ecs_column(rows, Position, 1);
+    Crumb *crumbs = ecs_column(rows, Crumb, 2);
 
-    char * message;
+    char *message;
 
     asprintf(&message, "Crumb count: %d", rows->count);
 
-    DrawTextEx(FontAlagard, message, (Vector2){.x=10, .y=5}, 20, 2, CREME);
+    DrawTextEx(FontAlagard, message, (Vector2){.x = 10, .y = 5}, 20, 2, CREME);
 
     free(message);
 }
 
-void Mover(ecs_rows_t * rows)
+void Mover(ecs_rows_t *rows)
 {
-    Position * positions = ecs_column(rows, Position, 1);
-    Velocity * velocities = ecs_column(rows, Velocity, 2);
+    Position *positions = ecs_column(rows, Position, 1);
+    Velocity *velocities = ecs_column(rows, Velocity, 2);
 
     WipeChunk();
 
@@ -165,17 +162,14 @@ void Mover(ecs_rows_t * rows)
         positions[i].x += velocities[i].x;
         positions[i].y += velocities[i].y;
 
-        positions[i].x = MIN(MAX(positions[i].x, 0), WORLD_WIDTH-CRUMB_SIZE);
-        positions[i].y = MIN(MAX(positions[i].y, 0), WORLD_HEIGHT-CRUMB_SIZE);
+        positions[i].x = MIN(MAX(positions[i].x, 0), WORLD_WIDTH - CRUMB_SIZE);
+        positions[i].y = MIN(MAX(positions[i].y, 0), WORLD_HEIGHT - CRUMB_SIZE);
 
-        if(!SetCrumb(positions[i], i))
-        {
-            printf("collision");
-        }
+        SetCrumb(positions[i], i);
     }
 }
 
-void CrummySystemsImport(ecs_world_t * world, int id)
+void CrummySystemsImport(ecs_world_t *world, int id)
 {
     ECS_MODULE(world, CrummySystems);
 
@@ -193,54 +187,54 @@ void CrummySystemsImport(ecs_world_t * world, int id)
     ECS_SET_ENTITY(Mover);
 }
 
-void Input(ecs_rows_t * rows)
+void Input(ecs_rows_t *rows)
 {
-    // XXX this is only going to be for debugging but the movement should be based more on changing the direction in terms of where the movement vector should point in the same direction of the face of the playable entitiy 
-    Velocity * velocities = ecs_column(rows, Velocity, 1);
+    // XXX this is only going to be for debugging but the movement should be based more on changing the direction in terms of where the movement vector should point in the same direction of the face of the playable entitiy
+    Velocity *velocities = ecs_column(rows, Velocity, 1);
 
     bool u = IsKeyDown(KEY_UP);
     bool d = IsKeyDown(KEY_DOWN);
     bool l = IsKeyDown(KEY_LEFT);
-    bool r = IsKeyDown(KEY_RIGHT);    
+    bool r = IsKeyDown(KEY_RIGHT);
 
-    for(int i = 0; i < rows->count; i++)
+    for (int i = 0; i < rows->count; i++)
     {
 
-        Vector2 targetVelocity = {.x=0, .y=0};
+        Vector2 targetVelocity = {.x = 0, .y = 0};
 
-        if(u && l)
+        if (u && l)
         {
-            targetVelocity.x = -ROOT2OVER2*CRUMB_SIZE;
-            targetVelocity.y = -ROOT2OVER2*CRUMB_SIZE;
+            targetVelocity.x = -ROOT2OVER2 * CRUMB_SIZE;
+            targetVelocity.y = -ROOT2OVER2 * CRUMB_SIZE;
         }
-        else if(u && r)
+        else if (u && r)
         {
-            targetVelocity.x = ROOT2OVER2*CRUMB_SIZE;
-            targetVelocity.y = -ROOT2OVER2*CRUMB_SIZE;
+            targetVelocity.x = ROOT2OVER2 * CRUMB_SIZE;
+            targetVelocity.y = -ROOT2OVER2 * CRUMB_SIZE;
         }
-        else if(u)
+        else if (u)
         {
             targetVelocity.y = -CRUMB_SIZE;
         }
-        else if(d && l)
+        else if (d && l)
         {
-            targetVelocity.x = -ROOT2OVER2*CRUMB_SIZE;
-            targetVelocity.y = ROOT2OVER2*CRUMB_SIZE;
+            targetVelocity.x = -ROOT2OVER2 * CRUMB_SIZE;
+            targetVelocity.y = ROOT2OVER2 * CRUMB_SIZE;
         }
-        else if(d && r)
+        else if (d && r)
         {
-            targetVelocity.x = ROOT2OVER2*CRUMB_SIZE;
-            targetVelocity.y = ROOT2OVER2*CRUMB_SIZE;
+            targetVelocity.x = ROOT2OVER2 * CRUMB_SIZE;
+            targetVelocity.y = ROOT2OVER2 * CRUMB_SIZE;
         }
-        else if(d)
+        else if (d)
         {
             targetVelocity.y = CRUMB_SIZE;
         }
-        else if(l)
+        else if (l)
         {
             targetVelocity.x = -CRUMB_SIZE;
         }
-        else if(r)
+        else if (r)
         {
             targetVelocity.x = CRUMB_SIZE;
         }

@@ -17,7 +17,7 @@ bool CrumbsHitting(Position crumba, Position crumbb)
     int asnapy = FloatToSnap(crumba.y);
     int bsnapx = FloatToSnap(crumbb.x);
     int bsnapy = FloatToSnap(crumbb.y);
-    
+
     return (asnapx == bsnapx && asnapy == bsnapy);
 }
 
@@ -36,19 +36,19 @@ Vector2 Vector2ToSnap(Vector2 pos)
 
 int RandInRange(int low, int high)
 {
-    return (rand() % (high - low + 1)) + low; 
+    return (rand() % (high - low + 1)) + low;
 }
 
-Color CrumbColorLookup[] = 
-{
-    // Void
-    DUSK,
+Color CrumbColorLookup[] =
+    {
+        // Void
+        DUSK,
 
-    // Rock
-    PRETTY_IN_PINK,
-    
-    // Sand
-    CREME,
+        // Rock
+        PRETTY_IN_PINK,
+
+        // Sand
+        CREME,
 };
 
 int Chunk[CHUNK_SIZE * CHUNK_SIZE];
@@ -61,9 +61,7 @@ int CrumbAt(Vector2 position)
 
     Vector2 chunkPosition = PixelToChunkPosition(position);
 
-    if(chunkPosition.x >= 0 && chunkPosition.y >= 0 
-        && chunkPosition.x < CHUNK_SIZE
-        && chunkPosition.y < CHUNK_SIZE)
+    if (chunkPosition.x >= 0 && chunkPosition.y >= 0 && chunkPosition.x < CHUNK_SIZE && chunkPosition.y < CHUNK_SIZE)
     {
         return Chunk[ChunkIndexFromChunkPosition(chunkPosition)];
     }
@@ -78,9 +76,7 @@ bool SetCrumb(Position position, int crumb)
 
     Vector2 chunkPosition = PixelToChunkPosition(position);
 
-    if(chunkPosition.x >= 0 && chunkPosition.y >= 0 
-        && chunkPosition.x < CHUNK_SIZE
-        && chunkPosition.y < CHUNK_SIZE)
+    if (chunkPosition.x >= 0 && chunkPosition.y >= 0 && chunkPosition.x < CHUNK_SIZE && chunkPosition.y < CHUNK_SIZE)
     {
         Chunk[ChunkIndexFromChunkPosition(chunkPosition)] = crumb;
         return true;
@@ -92,9 +88,7 @@ bool SetCrumb(Position position, int crumb)
 Vector2 PixelToChunkPosition(Position position)
 {
 
-    Vector2 chunkPosition = (Vector2){.x=(int)(position.x*CHUNK_SIZE/WORLD_WIDTH), .y=(int)(position.y*CHUNK_SIZE/WORLD_HEIGHT)};
-    
-    // printf("position: %.2f, %.2f, chunk index: %.2f, %.2f,\n", position.x, position.y, chunkPosition.x, chunkPosition.y);
+    Vector2 chunkPosition = (Vector2){.x = (int)(position.x * CHUNK_SIZE / WORLD_WIDTH), .y = (int)(position.y * CHUNK_SIZE / WORLD_HEIGHT)};
 
     return chunkPosition;
 }

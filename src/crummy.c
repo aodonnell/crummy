@@ -14,7 +14,7 @@
 int main(int argc, char *argv[])
 {
     InitWindow(WORLD_WIDTH, WORLD_HEIGHT, "crummy");
-    
+
     ecs_world_t *world = ecs_init();
 
     FontAlagard = LoadFont("assets/alagard.png");
