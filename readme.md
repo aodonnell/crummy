@@ -10,8 +10,8 @@ The goal of this project is to experiment with data driven programming for game 
 - Make folders called lib and build in the project root
     - `mkdir lib build`
 - Dependencies are built from source. Probably going to change this later on because it can be quite a pain.
-- Flecs is an excellent entity component system in
-- To handle cross platform rendering and audio, raylib is used.
+- Flecs is an excellent entity component system.
+- To handle cross platform rendering and audio, raylib is used (it's probably overkill).
 - Go to the lib directory and clone flecs and raylib from github
     - `cd lib`
     - `git clone https://github.com/SanderMertens/flecs`
