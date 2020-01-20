@@ -61,7 +61,7 @@ void CrumbSimulator(ecs_rows_t *rows)
                 velocities[i].x = 0;
                 velocities[i].y = baseSpeed;
             }
-            else if (sw && se && rand() > 0.5)
+            else if ((sw && se && rand() > 0.5) || sw)
             {
                 velocities[i].x = -ROOT2OVER2 * baseSpeed;
                 velocities[i].y = ROOT2OVER2 * baseSpeed;
@@ -71,9 +71,45 @@ void CrumbSimulator(ecs_rows_t *rows)
                 velocities[i].x = ROOT2OVER2 * baseSpeed;
                 velocities[i].y = ROOT2OVER2 * baseSpeed;
             }
-            else if (sw)
+            else
+            {
+                velocities[i].x = 0;
+                velocities[i].y = 0;
+            }
+
+            break;
+
+        case WaterCrumb:
+
+            s = CrumbAt((Position){.x = positions[i].x, .y = positions[i].y + CRUMB_SIZE}) < 0;
+            w = CrumbAt((Position){.x = positions[i].x - CRUMB_SIZE, .y = positions[i].y}) < 0;
+            e = CrumbAt((Position){.x = positions[i].x + CRUMB_SIZE, .y = positions[i].y}) < 0;
+            sw = w && CrumbAt((Position){.x = positions[i].x - CRUMB_SIZE, .y = positions[i].y + CRUMB_SIZE}) < 0;
+            se = e && CrumbAt((Position){.x = positions[i].x + CRUMB_SIZE, .y = positions[i].y + CRUMB_SIZE}) < 0;
+
+            if (s)
+            {
+                velocities[i].x = 0;
+                velocities[i].y = baseSpeed;
+            }
+            else if((e && w && rand() > 0.5) || e)
+            {
+                velocities[i].x = baseSpeed/2;
+                velocities[i].y = 0;
+            }
+            else if(w)
+            {
+                velocities[i].x = -baseSpeed/2;
+                velocities[i].y = 0;
+            }
+            else if ((sw && se && rand() > 0.5) || sw)
             {
                 velocities[i].x = -ROOT2OVER2 * baseSpeed;
+                velocities[i].y = ROOT2OVER2 * baseSpeed;
+            }
+            else if (se)
+            {
+                velocities[i].x = ROOT2OVER2 * baseSpeed;
                 velocities[i].y = ROOT2OVER2 * baseSpeed;
             }
             else
@@ -83,6 +119,7 @@ void CrumbSimulator(ecs_rows_t *rows)
             }
 
             break;
+
         default:
             break;
         }
@@ -101,7 +138,14 @@ void MouseCrumber(ecs_rows_t *rows)
 
     if (rightDown && !leftDown)
     {
-        crumbType = SandCrumb;
+        if (IsKeyDown(KEY_LEFT_SHIFT))
+        {
+            crumbType = WaterCrumb;
+        }
+        else
+        {
+            crumbType = SandCrumb;
+        }
     }
     else if (!rightDown && leftDown)
     {
@@ -145,7 +189,7 @@ void DebugHud(ecs_rows_t *rows)
 
     asprintf(&message, "Crumb count: %d", rows->count);
 
-    DrawTextEx(FontAlagard, message, (Vector2){.x = 10, .y = 5}, 20, 2, CREME);
+    DrawTextEx(FontAlagard, message, (Vector2){.x = 10, .y = 5}, 20, 2, BRIGHT_WHITES);
 
     free(message);
 }

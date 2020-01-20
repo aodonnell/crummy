@@ -19,6 +19,7 @@ typedef enum _crumb_type
     VoidCrumb,
     RockCrumb,
     SandCrumb,
+    WaterCrumb,
 } CrumbType;
 
 typedef struct _crumb 

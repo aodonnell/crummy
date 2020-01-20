@@ -49,6 +49,9 @@ Color CrumbColorLookup[] =
 
         // Sand
         CREME,
+
+        // Water
+        BRILLIANT_BLUE,
 };
 
 int Chunk[CHUNK_SIZE * CHUNK_SIZE];
