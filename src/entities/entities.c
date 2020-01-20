@@ -18,7 +18,7 @@ ecs_entity_t SpawnCrumb(ecs_world_t *world, Vector2 position, CrumbType type)
 
     ecs_set(world, id, Crumb, {.type = type});
 
-    ecs_add(world, id, Playable);
+    // ecs_add(world, id, Playable);
 
     return id;
 }

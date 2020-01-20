@@ -8,6 +8,8 @@
 
 #define CRUMB_SIZE 8 
 
+#define CHUNK_SIZE 64
+
 Font FontAlagard;
 
 #endif

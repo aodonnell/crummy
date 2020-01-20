@@ -26,6 +26,8 @@ typedef struct _crumb
     CrumbType type;
 } Crumb;
 
+extern int Chunk[];
+
 extern Color CrumbColorLookup[];
 
 bool CrumbsHitting(Position crumba, Position crumbb);
@@ -36,5 +38,17 @@ Vector2 Vector2ToSnap(Vector2 pos);
 int RandInRange(int low, int high);
 
 Vector2 Vector2Lerp(Vector2 current, Vector2 target, float by);
+
+
+// XXX temporary chunk methods
+int CrumbAt(Vector2 position);
+
+bool SetCrumb(Position position, int crumb);
+
+Vector2 PixelToChunkPosition(Position position);
+
+int ChunkIndexFromChunkPosition(Vector2 chunkPosition);
+
+void WipeChunk();
 
 #endif

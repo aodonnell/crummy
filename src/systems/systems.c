@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include "raylib.h"
 
@@ -10,6 +11,11 @@
 
 #include "systems.h"
 #include "entities.h"
+#include "components.h"
+
+// xxx no safety
+#define MIN(a,b) (((a)<(b))?(a):(b))
+#define MAX(a,b) (((a)>(b))?(a):(b))
 
 void CrumbRenderer(ecs_rows_t * rows)
 {
@@ -33,19 +39,21 @@ void CrumbSimulator(ecs_rows_t * rows)
 
     bool below, left, right;
 
+    Vector2 ;
+
     for(int i = 0; i < rows->count; i++)
     {
         switch(crumbs[i].type)
         {
-            case(VoidCrumb):
+            case VoidCrumb:
                 // XXX delete the crumb if it was set to void
                 // kinda like weird garbage collection
                 break;
-            case(SandCrumb):
+            case SandCrumb:
 
-                below = CrumbsHitting(positions[i], (Position){.x=positions[i].x, .y=positions[i].y+CRUMB_SIZE});
-                left = CrumbsHitting(positions[i], (Position){.x=positions[i].x + CRUMB_SIZE, .y=positions[i].y});
-                right = CrumbsHitting(positions[i], (Position){.x=positions[i].x - CRUMB_SIZE, .y=positions[i].y});
+                // below = ;
+                // left = CrumbsHitting(positions[i], (Position){.x=positions[i].x + CRUMB_SIZE, .y=positions[i].y});
+                // right = CrumbsHitting(positions[i], (Position){.x=positions[i].x - CRUMB_SIZE, .y=positions[i].y});
 
                 if(!below)
                 {
@@ -86,13 +94,11 @@ void MouseCrumber(ecs_rows_t * rows)
 
         Crumb * hitCrumb = NULL;
 
-        for(int i = 0; i < rows->count; i++)
+        int crumb = CrumbAt(mousePosition);
+
+        if(crumb > 0)
         {
-            if(CrumbsHitting(mousePosition, positions[i]))
-            {
-                hitCrumb = crumbs + i;
-                break;
-            }
+            hitCrumb = &crumbs[crumb];
         }
 
         if(hitCrumb)
@@ -130,11 +136,39 @@ void Mover(ecs_rows_t * rows)
     Position * positions = ecs_column(rows, Position, 1);
     Velocity * velocities = ecs_column(rows, Velocity, 2);
 
+    WipeChunk();
+
     for (int i = 0; i < rows->count; i++)
     {
         positions[i].x += velocities[i].x;
         positions[i].y += velocities[i].y;
+
+        positions[i].x = MIN(MAX(positions[i].x, 0), WORLD_WIDTH-CRUMB_SIZE);
+        positions[i].y = MIN(MAX(positions[i].y, 0), WORLD_HEIGHT-CRUMB_SIZE);
+
+        if(!SetCrumb(positions[i], i))
+        {
+            printf("collision");
+        }
     }
+}
+
+void CrummySystemsImport(ecs_world_t * world, int id)
+{
+    ECS_MODULE(world, CrummySystems);
+
+    ECS_SYSTEM(world, CrumbRenderer, EcsOnUpdate, Position, Crumb);
+    ECS_SYSTEM(world, CrumbSimulator, EcsOnUpdate, Position, Velocity, Crumb);
+    ECS_SYSTEM(world, MouseCrumber, EcsOnUpdate, Position, Crumb);
+    ECS_SYSTEM(world, Mover, EcsOnUpdate, Position, Velocity);
+    ECS_SYSTEM(world, Input, EcsOnUpdate, Velocity, Playable);
+
+    ECS_SYSTEM(world, DebugHud, EcsOnUpdate, Position, Crumb);
+
+    ECS_SET_ENTITY(CrumbRenderer);
+    ECS_SET_ENTITY(MouseCrumber);
+    ECS_SET_ENTITY(CrumbSimulator);
+    ECS_SET_ENTITY(Mover);
 }
 
 void Input(ecs_rows_t * rows)
@@ -199,23 +233,4 @@ void Input(ecs_rows_t * rows)
         velocities[i].x = targetVelocity.x;
         velocities[i].y = targetVelocity.y;
     }
-}
-
-void CrummySystemsImport(ecs_world_t * world, int id)
-{
-    ECS_MODULE(world, CrummySystems);
-
-    ECS_SYSTEM(world, CrumbRenderer, EcsOnUpdate, Position, Crumb);
-    ECS_SYSTEM(world, CrumbSimulator, EcsOnUpdate, Position, Velocity, Crumb);
-    ECS_SYSTEM(world, MouseCrumber, EcsOnUpdate, Position, Crumb);
-    ECS_SYSTEM(world, Mover, EcsOnUpdate, Position, Velocity);
-    ECS_SYSTEM(world, Input, EcsOnUpdate, Velocity, Playable);
-    
-    ECS_SYSTEM(world, DebugHud, EcsOnUpdate, Position, Crumb);
-
-    ECS_SET_ENTITY(CrumbRenderer);
-    ECS_SET_ENTITY(CrumbSimulator);
-    ECS_SET_ENTITY(MouseCrumber);
-    ECS_SET_ENTITY(Mover);
-
 }
