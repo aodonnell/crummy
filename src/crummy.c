@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     ECS_IMPORT(world, CrummyComponents, 0);
     ECS_IMPORT(world, CrummySystems, 0);
 
-    SpawnCrumb(world, (Vector2){100, 100}, RockCrumb);
+    SpawnCrumb(world, (Vector2){0, 512}, RockCrumb);
 
     ecs_set_target_fps(world, 60);
 

@@ -149,7 +149,14 @@ void MouseCrumber(ecs_rows_t *rows)
     }
     else if (!rightDown && leftDown)
     {
-        crumbType = RockCrumb;
+        if (IsKeyDown(KEY_LEFT_SHIFT))
+        {
+            crumbType = PlantCrumb;
+        }
+        else
+        {
+            crumbType = RockCrumb;
+        }
     }
 
     if (crumbType != VoidCrumb)

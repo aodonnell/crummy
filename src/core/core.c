@@ -45,13 +45,16 @@ Color CrumbColorLookup[] =
         DUSK,
 
         // Rock
-        PRETTY_IN_PINK,
+        ROCKS_USED_TO_BE_PINK_Y_KNOW,
 
         // Sand
         CREME,
 
         // Water
         BRILLIANT_BLUE,
+
+        // Plant
+        SOMETHING_GREEN,
 };
 
 int Chunk[CHUNK_SIZE * CHUNK_SIZE];
