@@ -70,7 +70,7 @@ void CrumbSimulator(ecs_rows_t *rows)
                     targetV.x = 0;
                     targetV.y = baseSpeed;
                 }
-                else if ((sw && se && rand() > 0.5) || (sw && !se))
+                else if ((sw && se && Rand01() > 0.5) || (sw && !se))
                 {
                     targetV.x = -ROOT2OVER2 * baseSpeed;
                     targetV.y = ROOT2OVER2 * baseSpeed;
@@ -117,7 +117,7 @@ void CrumbSimulator(ecs_rows_t *rows)
                     velocities[i].x = 0;
                     velocities[i].y = baseSpeed;
                 }
-                else if ((sw && se && rand() > 0.5) || (sw && !se))
+                else if ((sw && se && Rand01() > 0.5) || (sw && !se))
                 {
                     velocities[i].x = -ROOT2OVER2 * baseSpeed;
                     velocities[i].y = ROOT2OVER2 * baseSpeed;
@@ -127,7 +127,7 @@ void CrumbSimulator(ecs_rows_t *rows)
                     velocities[i].x = ROOT2OVER2 * baseSpeed;
                     velocities[i].y = ROOT2OVER2 * baseSpeed;
                 }
-                else if((e && w && rand() > 0.5) || (e && !w))
+                else if((e && w && Rand01() > 0.5) || (e && !w))
                 {
                     velocities[i].x = baseSpeed;
                     velocities[i].y = 0;

@@ -10,7 +10,7 @@
 
 #define CHUNK_SIZE 64
 
-#define DANK_FACTOR 0.10
+#define DANK_FACTOR 0.24
 
 Font FontAlagard;
 
