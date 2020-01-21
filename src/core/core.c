@@ -98,8 +98,7 @@ bool SetCrumb(Position position, int crumb)
 
 Vector2 PixelToChunkPosition(Position position)
 {
-
-    Vector2 chunkPosition = (Vector2){.x = (int)(position.x * CHUNK_SIZE / WORLD_WIDTH), .y = (int)(position.y * CHUNK_SIZE / WORLD_HEIGHT)};
+    Vector2 chunkPosition = (Vector2){.x = (int)((position.x * CHUNK_SIZE)/ WORLD_WIDTH), .y = (int)((position.y * CHUNK_SIZE)/ WORLD_HEIGHT)};
 
     return chunkPosition;
 }

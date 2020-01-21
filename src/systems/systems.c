@@ -41,68 +41,62 @@ void CrumbSimulator(ecs_rows_t *rows)
 
     float baseSpeed = CRUMB_SIZE / 2;
 
+    Vector2 targetV;
+
     for (int i = 0; i < rows->count; i++)
     {
+        s = CrumbAt((Position){.x = positions[i].x, .y = positions[i].y + CRUMB_SIZE}) < 0;
+        w = CrumbAt((Position){.x = positions[i].x - CRUMB_SIZE, .y = positions[i].y}) < 0;
+        e = CrumbAt((Position){.x = positions[i].x + CRUMB_SIZE, .y = positions[i].y}) < 0;
+        sw = CrumbAt((Position){.x = positions[i].x - CRUMB_SIZE, .y = positions[i].y + CRUMB_SIZE}) < 0;
+        se = CrumbAt((Position){.x = positions[i].x + CRUMB_SIZE, .y = positions[i].y + CRUMB_SIZE}) < 0;
+
         switch (crumbs[i].type)
         {
         case VoidCrumb:
             // XXX delete the crumb if it was set to void?
             break;
         case SandCrumb:
-
-            s = CrumbAt((Position){.x = positions[i].x, .y = positions[i].y + CRUMB_SIZE}) < 0;
-            sw = CrumbAt((Position){.x = positions[i].x - CRUMB_SIZE, .y = positions[i].y + CRUMB_SIZE}) < 0;
-            sw &= CrumbAt((Position){.x = positions[i].x - CRUMB_SIZE, .y = positions[i].y}) < 0;
-            se = CrumbAt((Position){.x = positions[i].x + CRUMB_SIZE, .y = positions[i].y + CRUMB_SIZE}) < 0;
-            se &= CrumbAt((Position){.x = positions[i].x + CRUMB_SIZE, .y = positions[i].y}) < 0;
+        
+            se = se && e;
+            sw = sw && w;
 
             if (s)
             {
-                velocities[i].x = 0;
-                velocities[i].y = baseSpeed;
+                targetV.x = 0;
+                targetV.y = baseSpeed;
             }
-            else if ((sw && se && rand() > 0.5) || sw)
+            else if ((sw && se && rand() > 0.5) || (sw && !se))
             {
-                velocities[i].x = -ROOT2OVER2 * baseSpeed;
-                velocities[i].y = ROOT2OVER2 * baseSpeed;
+                targetV.x = -ROOT2OVER2 * baseSpeed;
+                targetV.y = ROOT2OVER2 * baseSpeed;
             }
             else if (se)
             {
-                velocities[i].x = ROOT2OVER2 * baseSpeed;
-                velocities[i].y = ROOT2OVER2 * baseSpeed;
+                targetV.x = ROOT2OVER2 * baseSpeed;
+                targetV.y = ROOT2OVER2 * baseSpeed;
             }
             else
             {
-                velocities[i].x = 0;
-                velocities[i].y = 0;
+                targetV.x = 0;
+                targetV.y = 0;
             }
+
+            velocities[i] = Vector2Lerp(velocities[i], targetV, 0.5);
 
             break;
 
         case WaterCrumb:
 
-            s = CrumbAt((Position){.x = positions[i].x, .y = positions[i].y + CRUMB_SIZE}) < 0;
-            w = CrumbAt((Position){.x = positions[i].x - CRUMB_SIZE, .y = positions[i].y}) < 0;
-            e = CrumbAt((Position){.x = positions[i].x + CRUMB_SIZE, .y = positions[i].y}) < 0;
-            sw = w && CrumbAt((Position){.x = positions[i].x - CRUMB_SIZE, .y = positions[i].y + CRUMB_SIZE}) < 0;
-            se = e && CrumbAt((Position){.x = positions[i].x + CRUMB_SIZE, .y = positions[i].y + CRUMB_SIZE}) < 0;
+            se = se && e;
+            sw = sw && w;
 
             if (s)
             {
                 velocities[i].x = 0;
                 velocities[i].y = baseSpeed;
             }
-            else if((e && w && rand() > 0.5) || e)
-            {
-                velocities[i].x = baseSpeed/2;
-                velocities[i].y = 0;
-            }
-            else if(w)
-            {
-                velocities[i].x = -baseSpeed/2;
-                velocities[i].y = 0;
-            }
-            else if ((sw && se && rand() > 0.5) || sw)
+            else if ((sw && se && rand() > 0.5) || (sw && !se))
             {
                 velocities[i].x = -ROOT2OVER2 * baseSpeed;
                 velocities[i].y = ROOT2OVER2 * baseSpeed;
@@ -112,11 +106,23 @@ void CrumbSimulator(ecs_rows_t *rows)
                 velocities[i].x = ROOT2OVER2 * baseSpeed;
                 velocities[i].y = ROOT2OVER2 * baseSpeed;
             }
+            else if((e && w && rand() > 0.5) || (e && !w))
+            {
+                velocities[i].x = baseSpeed;
+                velocities[i].y = 0;
+            }
+            else if(w)
+            {
+                velocities[i].x = -baseSpeed;
+                velocities[i].y = 0;
+            }
             else
             {
                 velocities[i].x = 0;
                 velocities[i].y = 0;
             }
+
+            velocities[i] = Vector2Lerp(velocities[i], targetV, 0.5);
 
             break;
 
