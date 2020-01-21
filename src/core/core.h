@@ -25,7 +25,7 @@ typedef enum _crumb_flavor
 
 typedef struct _crumb 
 {
-    CrumbFlavor type;
+    CrumbFlavor flavor;
 } Crumb;
 
 extern int Chunk[];

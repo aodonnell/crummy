@@ -27,7 +27,7 @@ void CrumbRenderer(ecs_rows_t *rows)
         int snapx = FloatToSnap(positions[i].x);
         int snapy = FloatToSnap(positions[i].y);
 
-        DrawRectangle(snapx, snapy, CRUMB_SIZE, CRUMB_SIZE, CrumbColorLookup[crumbs[i].type]);
+        DrawRectangle(snapx, snapy, CRUMB_SIZE, CRUMB_SIZE, CrumbColorLookup[crumbs[i].flavor]);
     }
 }
 
@@ -37,7 +37,7 @@ void CrumbSimulator(ecs_rows_t *rows)
     Velocity *velocities = ecs_column(rows, Velocity, 2);
     Crumb *crumbs = ecs_column(rows, Crumb, 3);
 
-    bool n, ne, e, se, s, sw, w, nw;
+    int n, ne, e, se, s, sw, w, nw;
 
     float baseSpeed = CRUMB_SIZE / 2;
 
@@ -45,86 +45,107 @@ void CrumbSimulator(ecs_rows_t *rows)
 
     for (int i = 0; i < rows->count; i++)
     {
-        s = CrumbAt((Position){.x = positions[i].x, .y = positions[i].y + CRUMB_SIZE}) < 0;
-        w = CrumbAt((Position){.x = positions[i].x - CRUMB_SIZE, .y = positions[i].y}) < 0;
-        e = CrumbAt((Position){.x = positions[i].x + CRUMB_SIZE, .y = positions[i].y}) < 0;
-        sw = CrumbAt((Position){.x = positions[i].x - CRUMB_SIZE, .y = positions[i].y + CRUMB_SIZE}) < 0;
-        se = CrumbAt((Position){.x = positions[i].x + CRUMB_SIZE, .y = positions[i].y + CRUMB_SIZE}) < 0;
+        s = CrumbAt((Position){.x = positions[i].x, .y = positions[i].y + CRUMB_SIZE});
+        w = CrumbAt((Position){.x = positions[i].x - CRUMB_SIZE, .y = positions[i].y});
+        e = CrumbAt((Position){.x = positions[i].x + CRUMB_SIZE, .y = positions[i].y});
+        sw = CrumbAt((Position){.x = positions[i].x - CRUMB_SIZE, .y = positions[i].y + CRUMB_SIZE});
+        se = CrumbAt((Position){.x = positions[i].x + CRUMB_SIZE, .y = positions[i].y + CRUMB_SIZE});
 
-        switch (crumbs[i].type)
+        switch (crumbs[i].flavor)
         {
-        case VoidCrumb:
-            // XXX delete the crumb if it was set to void?
-            break;
-        case SandCrumb:
-        
-            se = se && e;
-            sw = sw && w;
+            case VoidCrumb:
+                // XXX delete the crumb if it was set to void?
+                break;
+            case SandCrumb:
 
-            if (s)
-            {
-                targetV.x = 0;
-                targetV.y = baseSpeed;
-            }
-            else if ((sw && se && rand() > 0.5) || (sw && !se))
-            {
-                targetV.x = -ROOT2OVER2 * baseSpeed;
-                targetV.y = ROOT2OVER2 * baseSpeed;
-            }
-            else if (se)
-            {
-                targetV.x = ROOT2OVER2 * baseSpeed;
-                targetV.y = ROOT2OVER2 * baseSpeed;
-            }
-            else
-            {
-                targetV.x = 0;
-                targetV.y = 0;
-            }
+                e = e < 0;
+                w = w < 0;
+                s = s < 0;
 
-            velocities[i] = Vector2Lerp(velocities[i], targetV, 0.5);
+                se = se < 0 && e;
+                sw = sw < 0 && w;
 
-            break;
+                if (s)
+                {
+                    targetV.x = 0;
+                    targetV.y = baseSpeed;
+                }
+                else if ((sw && se && rand() > 0.5) || (sw && !se))
+                {
+                    targetV.x = -ROOT2OVER2 * baseSpeed;
+                    targetV.y = ROOT2OVER2 * baseSpeed;
+                }
+                else if (se)
+                {
+                    targetV.x = ROOT2OVER2 * baseSpeed;
+                    targetV.y = ROOT2OVER2 * baseSpeed;
+                }
+                else
+                {
+                    targetV.x = 0;
+                    targetV.y = 0;
+                }
 
-        case WaterCrumb:
+                velocities[i] = Vector2Lerp(velocities[i], targetV, 0.5);
 
-            se = se && e;
-            sw = sw && w;
+                break;
 
-            if (s)
-            {
-                velocities[i].x = 0;
-                velocities[i].y = baseSpeed;
-            }
-            else if ((sw && se && rand() > 0.5) || (sw && !se))
-            {
-                velocities[i].x = -ROOT2OVER2 * baseSpeed;
-                velocities[i].y = ROOT2OVER2 * baseSpeed;
-            }
-            else if (se)
-            {
-                velocities[i].x = ROOT2OVER2 * baseSpeed;
-                velocities[i].y = ROOT2OVER2 * baseSpeed;
-            }
-            else if((e && w && rand() > 0.5) || (e && !w))
-            {
-                velocities[i].x = baseSpeed;
-                velocities[i].y = 0;
-            }
-            else if(w)
-            {
-                velocities[i].x = -baseSpeed;
-                velocities[i].y = 0;
-            }
-            else
-            {
-                velocities[i].x = 0;
-                velocities[i].y = 0;
-            }
+            case WaterCrumb:
 
-            velocities[i] = Vector2Lerp(velocities[i], targetV, 0.5);
+                if((se >= 0 && crumbs[se].flavor == PlantCrumb)        \
+                    || (sw >= 0 && crumbs[sw].flavor == PlantCrumb)    \
+                    || (s >= 0 && crumbs[s].flavor == PlantCrumb))     \
+                {
+                    if(Rand01() < DANK_FACTOR)
+                    {
+                        crumbs[i].flavor = PlantCrumb;
+                        velocities[i].x = 0;
+                        velocities[i].y = 0;
+                    }
+                    break;
+                }
 
-            break;
+                e = e < 0;
+                w = w < 0;
+                s = s < 0;
+
+                se = se < 0 && e;
+                sw = sw < 0 && w;
+
+                if (s)
+                {
+                    velocities[i].x = 0;
+                    velocities[i].y = baseSpeed;
+                }
+                else if ((sw && se && rand() > 0.5) || (sw && !se))
+                {
+                    velocities[i].x = -ROOT2OVER2 * baseSpeed;
+                    velocities[i].y = ROOT2OVER2 * baseSpeed;
+                }
+                else if (se)
+                {
+                    velocities[i].x = ROOT2OVER2 * baseSpeed;
+                    velocities[i].y = ROOT2OVER2 * baseSpeed;
+                }
+                else if((e && w && rand() > 0.5) || (e && !w))
+                {
+                    velocities[i].x = baseSpeed;
+                    velocities[i].y = 0;
+                }
+                else if(w)
+                {
+                    velocities[i].x = -baseSpeed;
+                    velocities[i].y = 0;
+                }
+                else
+                {
+                    velocities[i].x = 0;
+                    velocities[i].y = 0;
+                }
+
+                velocities[i] = Vector2Lerp(velocities[i], targetV, 0.5);
+
+                break;
 
         default:
             break;
@@ -181,7 +202,7 @@ void MouseCrumber(ecs_rows_t *rows)
         if (hitCrumb)
         {
             // Instead of deleting and making another crumb we just alter the one we hit
-            hitCrumb->type = crumbType;
+            hitCrumb->flavor = crumbType;
         }
         else
         {
@@ -253,7 +274,6 @@ void Input(ecs_rows_t *rows)
 
     for (int i = 0; i < rows->count; i++)
     {
-
         Vector2 targetVelocity = {.x = 0, .y = 0};
 
         if (u && l)
