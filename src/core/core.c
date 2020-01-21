@@ -39,6 +39,11 @@ int RandInRange(int low, int high)
     return (rand() % (high - low + 1)) + low;
 }
 
+double Rand01()
+{
+    return rand()/(double)RAND_MAX;
+}
+
 Color CrumbColorLookup[] =
     {
         // Void

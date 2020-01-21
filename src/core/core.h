@@ -14,18 +14,18 @@ typedef struct Vector2 Position;
 
 typedef struct Vector2 Velocity;
 
-typedef enum _crumb_type
+typedef enum _crumb_flavor
 {
     VoidCrumb,
     RockCrumb,
     SandCrumb,
     WaterCrumb,
     PlantCrumb,
-} CrumbType;
+} CrumbFlavor;
 
 typedef struct _crumb 
 {
-    CrumbType type;
+    CrumbFlavor type;
 } Crumb;
 
 extern int Chunk[];
@@ -52,5 +52,7 @@ Vector2 PixelToChunkPosition(Position position);
 int ChunkIndexFromChunkPosition(Vector2 chunkPosition);
 
 void WipeChunk();
+
+double Rand01();
 
 #endif

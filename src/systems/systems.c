@@ -134,11 +134,11 @@ void MouseCrumber(ecs_rows_t *rows)
     bool rightDown = IsMouseButtonDown(MOUSE_RIGHT_BUTTON);
     bool leftDown = IsMouseButtonDown(MOUSE_LEFT_BUTTON);
 
-    CrumbType crumbType = VoidCrumb;
+    CrumbFlavor crumbType = VoidCrumb;
 
     if (rightDown && !leftDown)
     {
-        if (IsKeyDown(KEY_LEFT_SHIFT))
+        if (IsKeyDown(KEY_SPACE))
         {
             crumbType = WaterCrumb;
         }
@@ -149,7 +149,7 @@ void MouseCrumber(ecs_rows_t *rows)
     }
     else if (!rightDown && leftDown)
     {
-        if (IsKeyDown(KEY_LEFT_SHIFT))
+        if (IsKeyDown(KEY_SPACE))
         {
             crumbType = PlantCrumb;
         }
@@ -174,10 +174,7 @@ void MouseCrumber(ecs_rows_t *rows)
 
         if (hitCrumb)
         {
-            // TODO If we hit a crumb, we need to simulate the effects of them colliding
-
             // Instead of deleting and making another crumb we just alter the one we hit
-            Color rand = {RandInRange(0, 0xff), RandInRange(0, 0xff), RandInRange(0, 0xff), 0xff};
             hitCrumb->type = crumbType;
         }
         else

@@ -6,6 +6,6 @@
 
 #include "core.h"
 
-ecs_entity_t SpawnCrumb(ecs_world_t * world , Vector2 position, CrumbType type);
+ecs_entity_t SpawnCrumb(ecs_world_t * world , Vector2 position, CrumbFlavor type);
 
 #endif
