@@ -39,6 +39,10 @@ void CrumbSimulator(ecs_rows_t *rows)
 
     int n, ne, e, se, s, sw, w, nw;
 
+    int sewater = 0; 
+    int swwater = 0; 
+    int swater = 0;
+
     float baseSpeed = CRUMB_SIZE / 2;
 
     Vector2 targetV;
@@ -57,6 +61,33 @@ void CrumbSimulator(ecs_rows_t *rows)
                 // XXX delete the crumb if it was set to void?
                 break;
             case SandCrumb:
+
+                // sewater = (crumbs[se].flavor == WaterCrumb); 
+                // swwater = (crumbs[sw].flavor == WaterCrumb); 
+                // swater = (crumbs[s].flavor == WaterCrumb);
+
+                // if((se >= 0 && (sewater))       \
+                //     || (sw >= 0 && (swwater))   \
+                //     || (s >= 0 && (swater)))    \
+                // {
+
+                //     crumbs[i].flavor = WaterCrumb;
+
+                //     if(swater)
+                //     {
+                //         crumbs[s].flavor = SandCrumb;
+                //     }
+                //     else if((sewater && swwater && Rand01() < 0.5) || (sewater && !swwater))
+                //     {
+                //         crumbs[se].flavor = SandCrumb;
+                //     }
+                //     else
+                //     {
+                //         crumbs[s].flavor = SandCrumb;
+                //     }
+
+                //     break;
+                // }
 
                 e = e < 0;
                 w = w < 0;
@@ -87,7 +118,6 @@ void CrumbSimulator(ecs_rows_t *rows)
                 }
 
                 velocities[i] = Vector2Lerp(velocities[i], targetV, 0.5);
-
                 break;
 
             case WaterCrumb:
@@ -114,33 +144,33 @@ void CrumbSimulator(ecs_rows_t *rows)
 
                 if (s)
                 {
-                    velocities[i].x = 0;
-                    velocities[i].y = baseSpeed;
+                    targetV.x = 0;
+                    targetV.y = baseSpeed;
                 }
                 else if ((sw && se && Rand01() > 0.5) || (sw && !se))
                 {
-                    velocities[i].x = -ROOT2OVER2 * baseSpeed;
-                    velocities[i].y = ROOT2OVER2 * baseSpeed;
+                    targetV.x = -ROOT2OVER2 * baseSpeed;
+                    targetV.y = ROOT2OVER2 * baseSpeed;
                 }
                 else if (se)
                 {
-                    velocities[i].x = ROOT2OVER2 * baseSpeed;
-                    velocities[i].y = ROOT2OVER2 * baseSpeed;
+                    targetV.x = ROOT2OVER2 * baseSpeed;
+                    targetV.y = ROOT2OVER2 * baseSpeed;
                 }
                 else if((e && w && Rand01() > 0.5) || (e && !w))
                 {
-                    velocities[i].x = baseSpeed;
-                    velocities[i].y = 0;
+                    targetV.x = baseSpeed;
+                    targetV.y = 0;
                 }
                 else if(w)
                 {
-                    velocities[i].x = -baseSpeed;
-                    velocities[i].y = 0;
+                    targetV.x = -baseSpeed;
+                    targetV.y = 0;
                 }
                 else
                 {
-                    velocities[i].x = 0;
-                    velocities[i].y = 0;
+                    targetV.x = 0;
+                    targetV.y = 0;
                 }
 
                 velocities[i] = Vector2Lerp(velocities[i], targetV, 0.5);
@@ -318,7 +348,7 @@ void Input(ecs_rows_t *rows)
             targetVelocity.y = 0.0;
         }
 
-        targetVelocity = Vector2Lerp(velocities[i], targetVelocity, 0.5);
+        // targetVelocity = Vector2Lerp(velocities[i], targetVelocity, 0.5);
 
         velocities[i].x = targetVelocity.x;
         velocities[i].y = targetVelocity.y;
