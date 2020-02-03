@@ -13,8 +13,27 @@ ecs_entity_t SpawnCrumb(ecs_world_t *world, Vector2 position, CrumbFlavor flavor
 
     ecs_set(world, id, Position, {.x = position.x, .y = position.y});
     ecs_set(world, id, Velocity, {.x = 0, .y = 0});
-
     ecs_set(world, id, Crumb, {.flavor = flavor});
+
+    return id;
+}
+
+ecs_entity_t SpawnCCamera(ecs_world_t * world, Vector2 position)
+{
+    ecs_entity_t id = ecs_new(world, 0);
+
+    ECS_IMPORT(world, CrummyComponents, 0);
+
+    ecs_set(world, id, Position, {.x = position.x, .y = position.y});
+    ecs_set(world, id, Velocity, {.x = 0, .y = 0});
+
+    ecs_set(world, id, CCamera,                                 \
+    {.target=position,                                          \
+    .offset=(Vector2){ WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2},  \
+    .rotation=0.0f,                                             \
+    .zoom=1.0f});
+
+    ecs_add(world, id, Playable);
 
     return id;
 }

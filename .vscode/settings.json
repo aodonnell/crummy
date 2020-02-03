@@ -2,6 +2,7 @@
     "files.associations": {
         "raylib.h": "c",
         "raudio.h": "c",
-        "*.h": "c"
+        "*.h": "c",
+        "*.m": "c"
     }
 }

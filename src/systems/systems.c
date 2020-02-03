@@ -49,11 +49,11 @@ void CrumbSimulator(ecs_rows_t *rows)
 
     for (int i = 0; i < rows->count; i++)
     {
-        s = CrumbAt((Position){.x = positions[i].x, .y = positions[i].y + CRUMB_SIZE});
-        w = CrumbAt((Position){.x = positions[i].x - CRUMB_SIZE, .y = positions[i].y});
-        e = CrumbAt((Position){.x = positions[i].x + CRUMB_SIZE, .y = positions[i].y});
-        sw = CrumbAt((Position){.x = positions[i].x - CRUMB_SIZE, .y = positions[i].y + CRUMB_SIZE});
-        se = CrumbAt((Position){.x = positions[i].x + CRUMB_SIZE, .y = positions[i].y + CRUMB_SIZE});
+        // s = CrumbAt((Position){.x = positions[i].x, .y = positions[i].y + CRUMB_SIZE});
+        // w = CrumbAt((Position){.x = positions[i].x - CRUMB_SIZE, .y = positions[i].y});
+        // e = CrumbAt((Position){.x = positions[i].x + CRUMB_SIZE, .y = positions[i].y});
+        // sw = CrumbAt((Position){.x = positions[i].x - CRUMB_SIZE, .y = positions[i].y + CRUMB_SIZE});
+        // se = CrumbAt((Position){.x = positions[i].x + CRUMB_SIZE, .y = positions[i].y + CRUMB_SIZE});
 
         switch (crumbs[i].flavor)
         {
@@ -222,12 +222,12 @@ void MouseCrumber(ecs_rows_t *rows)
 
         Crumb *hitCrumb = NULL;
 
-        int crumb = CrumbAt(mousePosition);
+        // int crumb = CrumbAt(mousePosition);
 
-        if (crumb > 0)
-        {
-            hitCrumb = &crumbs[crumb];
-        }
+        // if (crumb > 0)
+        // {
+        //     hitCrumb = &crumbs[crumb];
+        // }
 
         if (hitCrumb)
         {
@@ -238,6 +238,16 @@ void MouseCrumber(ecs_rows_t *rows)
         {
             SpawnCrumb(rows->world, mousePosition, crumbType);
         }
+    }
+}
+
+void ChunkManager(ecs_rows_t *rows)
+{
+    Chunk * chunks = ecs_column(rows, Chunk, 1);
+
+    for(int i = 0; i < rows->count; i++)
+    {
+
     }
 }
 
@@ -260,17 +270,16 @@ void Mover(ecs_rows_t *rows)
     Position *positions = ecs_column(rows, Position, 1);
     Velocity *velocities = ecs_column(rows, Velocity, 2);
 
-    WipeChunk();
+    // Chunks are empty to begin with
+    // WipeChunks();
 
     for (int i = 0; i < rows->count; i++)
     {
         positions[i].x += velocities[i].x;
         positions[i].y += velocities[i].y;
 
-        positions[i].x = MIN(MAX(positions[i].x, 0), WORLD_WIDTH - CRUMB_SIZE);
-        positions[i].y = MIN(MAX(positions[i].y, 0), WORLD_HEIGHT - CRUMB_SIZE);
-
-        SetCrumb(positions[i], i);
+        // Need to tell the universe where this crumb lands
+        // SetCrumb();
     }
 }
 

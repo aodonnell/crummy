@@ -8,4 +8,6 @@
 
 ecs_entity_t SpawnCrumb(ecs_world_t * world , Vector2 position, CrumbFlavor type);
 
+ecs_entity_t SpawnCCamera(ecs_world_t * world, Vector2 position);
+
 #endif
