@@ -3,6 +3,7 @@
         "raylib.h": "c",
         "raudio.h": "c",
         "*.h": "c",
-        "*.m": "c"
+        "*.m": "c",
+        "random": "c"
     }
 }

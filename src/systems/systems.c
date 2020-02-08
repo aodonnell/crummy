@@ -13,7 +13,7 @@
 #include "entities.h"
 #include "components.h"
 
-// xxx no type safety
+// xxx no type safety. (should make a better one)
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
@@ -21,17 +21,19 @@ void CrumbRenderer(ecs_rows_t *rows)
 {
     Position *positions = ecs_column(rows, Position, 1);
     Crumb *crumbs = ecs_column(rows, Crumb, 2);
-    // Camera2D *cameras = ecs_column(rows, Camera2D, 3);
+    Camera2D *cameras = ecs_column(rows, Camera2D, 3);
+
+    printf("In renderer. Rows: %d\n", rows->count);
+    printf("target: %.2f, %.2f\n", camera.target.x, camera.target.y);
+
+    DrawRectangle(camera.target.x+camera.offset.x, camera.target.y+camera.offset.y, CRUMB_SIZE, CRUMB_SIZE, FLAMINGO);
 
     for (int i = 0; i < rows->count; i++)
     {
         int snapx = FloatToSnap(positions[i].x);
         int snapy = FloatToSnap(positions[i].y);
 
-        // BeginMode2D(cameras[0]);
-            DrawRectangle(snapx, snapy, CRUMB_SIZE, CRUMB_SIZE, CrumbColorLookup[crumbs[i].flavor]);
-        // EndMode2D();
-
+        DrawRectangle(snapx, snapy, CRUMB_SIZE, CRUMB_SIZE, CrumbColorLookup[crumbs[i].flavor]);
     }
 }
 
@@ -298,7 +300,7 @@ void CameraSnapper(ecs_rows_t *rows)
     for(int i = 0; i < rows->count; i++)
     {
         printf("boom: %.2f, %.2f\n", positions[i].x, positions[i].y);
-        cameras[i].target = positions[i];
+        camera.target = positions[i];
     }
 }
 
@@ -306,7 +308,7 @@ void CrummySystemsImport(ecs_world_t *world, int id)
 {
     ECS_MODULE(world, CrummySystems);
 
-    ECS_SYSTEM(world, CrumbRenderer, EcsOnUpdate, Position, Crumb);
+    ECS_SYSTEM(world, CrumbRenderer, EcsOnUpdate, Position, Crumb, SYSTEM.Camera2D);
     ECS_SYSTEM(world, CrumbSimulator, EcsOnUpdate, Position, Velocity, Crumb);
     ECS_SYSTEM(world, MouseCrumber, EcsOnUpdate, ?Position, ?Crumb);
     ECS_SYSTEM(world, Mover, EcsOnUpdate, Position, Velocity);
