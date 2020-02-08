@@ -16,7 +16,7 @@
 #define DANK_FACTOR 0.24
 
 Font FontAlagard;
-Camera2D camera;
+Vector2 camera;
 
 extern char * universe;
 

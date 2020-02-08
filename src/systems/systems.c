@@ -21,19 +21,17 @@ void CrumbRenderer(ecs_rows_t *rows)
 {
     Position *positions = ecs_column(rows, Position, 1);
     Crumb *crumbs = ecs_column(rows, Crumb, 2);
-    Camera2D *cameras = ecs_column(rows, Camera2D, 3);
 
-    printf("In renderer. Rows: %d\n", rows->count);
-    printf("target: %.2f, %.2f\n", camera.target.x, camera.target.y);
+    printf("target: %.2f, %.2f\n", camera.x, camera.y);
 
-    DrawRectangle(camera.target.x, camera.target.y, CRUMB_SIZE, CRUMB_SIZE, FLAMINGO);
+    DrawRectangle(camera.x, camera.y, CRUMB_SIZE, CRUMB_SIZE, FLAMINGO);
 
     for (int i = 0; i < rows->count; i++)
     {
         int snapx = FloatToSnap(positions[i].x);
         int snapy = FloatToSnap(positions[i].y);
 
-        DrawRectangle(snapx + camera.target.x, snapy + camera.target.y, CRUMB_SIZE, CRUMB_SIZE, CrumbColorLookup[crumbs[i].flavor]);
+        DrawRectangle(snapx + camera.x, snapy + camera.y, CRUMB_SIZE, CRUMB_SIZE, CrumbColorLookup[crumbs[i].flavor]);
     }
 }
 
@@ -226,8 +224,8 @@ void MouseCrumber(ecs_rows_t *rows)
     {
         Vector2 mousePosition = Vector2ToSnap(GetMousePosition());
 
-        mousePosition.x -= camera.target.x;        
-        mousePosition.y -= camera.target.y;
+        mousePosition.x -= camera.x;        
+        mousePosition.y -= camera.y;
 
         Crumb *hitCrumb = NULL;
 
@@ -294,28 +292,14 @@ void Mover(ecs_rows_t *rows)
     }
 }
 
-void CameraSnapper(ecs_rows_t *rows)
-{
-    Position *positions = ecs_column(rows, Position, 1);
-    Camera2D *cameras = ecs_column(rows, Camera2D, 2);
-
-
-    for(int i = 0; i < rows->count; i++)
-    {
-        printf("boom: %.2f, %.2f\n", positions[i].x, positions[i].y);
-        camera.target = positions[i];
-    }
-}
-
 void CrummySystemsImport(ecs_world_t *world, int id)
 {
     ECS_MODULE(world, CrummySystems);
 
-    ECS_SYSTEM(world, CrumbRenderer, EcsOnUpdate, Position, Crumb, SYSTEM.Camera2D);
+    ECS_SYSTEM(world, CrumbRenderer, EcsOnUpdate, Position, Crumb);
     ECS_SYSTEM(world, CrumbSimulator, EcsOnUpdate, Position, Velocity, Crumb);
     ECS_SYSTEM(world, MouseCrumber, EcsOnUpdate, ?Position, ?Crumb);
     ECS_SYSTEM(world, Mover, EcsOnUpdate, Position, Velocity);
-    ECS_SYSTEM(world, CameraSnapper, EcsOnUpdate, Position, Camera2D);
 
     ECS_SYSTEM(world, Input, EcsOnUpdate, Velocity, Playable);
 
@@ -324,19 +308,19 @@ void CrummySystemsImport(ecs_world_t *world, int id)
     ECS_SET_ENTITY(CrumbRenderer);
     ECS_SET_ENTITY(MouseCrumber);
     ECS_SET_ENTITY(CrumbSimulator);
-    ECS_SET_ENTITY(CameraSnapper);
     ECS_SET_ENTITY(Mover);
 }
 
 void Input(ecs_rows_t *rows)
 {
-    // XXX this is only going to be for debugging but the movement should be based more on changing the direction in terms of where the movement vector should point in the same direction of the face of the playable entitiy
     Velocity *velocities = ecs_column(rows, Velocity, 1);
 
     bool u = IsKeyDown(KEY_UP);
     bool d = IsKeyDown(KEY_DOWN);
     bool l = IsKeyDown(KEY_LEFT);
     bool r = IsKeyDown(KEY_RIGHT);
+
+    printf("input: %d\n", rows->count);
 
     for (int i = 0; i < rows->count; i++)
     {
@@ -388,5 +372,10 @@ void Input(ecs_rows_t *rows)
 
         velocities[i].x = targetVelocity.x;
         velocities[i].y = targetVelocity.y;
+
+        // HACK this only works because we only have one playable
+        camera.x += targetVelocity.x;
+        camera.y += targetVelocity.y;
     }
+
 }

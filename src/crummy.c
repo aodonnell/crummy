@@ -23,27 +23,19 @@ int main(int argc, char *argv[])
     ECS_IMPORT(world, CrummyComponents, 0);
     ECS_IMPORT(world, CrummySystems, 0);
 
-    camera = (Camera2D){.target = (Vector2){WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2},
-                       .offset = (Vector2){0, 0},
-                       .rotation = 0.0f,
-                       .zoom = 1.0f};
+    camera = (Vector2){WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2};
 
-    SpawnCrumb(world, (Vector2){0, 512}, RockCrumb);
-    SpawnCamera2D(world, (Vector2){0, 512}, &camera);
+
+    // SpawnCrumb(world, (Vector2){0, 512}, RockCrumb);
+    SpawnCamera2D(world, &camera);
 
     ecs_set_target_fps(world, 60);
 
-    BeginDrawing();
-    ClearBackground(DUSK);
-        BeginMode2D(camera);
-
     while (!WindowShouldClose() && ecs_progress(world, 0))
     {
-            EndMode2D();
         EndDrawing();
         BeginDrawing();
         ClearBackground(DUSK);
-            BeginMode2D(camera);
     }
 
     ecs_fini(world);
