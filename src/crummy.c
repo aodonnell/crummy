@@ -1,5 +1,6 @@
 #include <flecs.h>
 #include <raylib.h>
+#include <sys/time.h>
 
 #include "crummy.h"
 #include "colors.h"
@@ -23,22 +24,30 @@ int main(int argc, char *argv[])
     ECS_IMPORT(world, CrummyComponents, 0);
     ECS_IMPORT(world, CrummySystems, 0);
 
-    Camera2D camera = {.target = (Vector2){0, 0},
+    Camera2D camera = {.target = (Vector2){WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX},
                        .offset = (Vector2){0, 0},
                        .rotation = 0.0f,
                        .zoom = 1.0f};
 
-    SpawnCrumb(world, (Vector2){0, 512}, RockCrumb);
+    // SpawnCrumb(world, (Vector2){0, 512}, RockCrumb);
     SpawnCamera2D(world, (Vector2){0, 512}, &camera);
 
     ecs_set_target_fps(world, 60);
 
-    while (!WindowShouldClose() && ecs_progress(world, 0))
+
+    struct timeval ti, tf;
+    double deltat;
+
+    while (!WindowShouldClose() && ecs_progress(world, deltat))
     {
+        gettimeofday(&ti, NULL);
         BeginDrawing();
         ClearBackground(DUSK);
-        BeginMode2D(camera);
         EndDrawing();
+        gettimeofday(&tf, NULL);
+
+        deltat = (tf.tv_sec - ti.tv_sec) * 1000.0;      // sec to ms
+        deltat += (tf.tv_usec - ti.tv_usec) / 1000.0;   // us to ms
     }
 
     ecs_fini(world);

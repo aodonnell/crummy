@@ -21,13 +21,17 @@ void CrumbRenderer(ecs_rows_t *rows)
 {
     Position *positions = ecs_column(rows, Position, 1);
     Crumb *crumbs = ecs_column(rows, Crumb, 2);
+    // Camera2D *cameras = ecs_column(rows, Camera2D, 3);
 
     for (int i = 0; i < rows->count; i++)
     {
         int snapx = FloatToSnap(positions[i].x);
         int snapy = FloatToSnap(positions[i].y);
 
-        DrawRectangle(snapx, snapy, CRUMB_SIZE, CRUMB_SIZE, CrumbColorLookup[crumbs[i].flavor]);
+        // BeginMode2D(cameras[0]);
+            DrawRectangle(snapx, snapy, CRUMB_SIZE, CRUMB_SIZE, CrumbColorLookup[crumbs[i].flavor]);
+        // EndMode2D();
+
     }
 }
 
@@ -304,7 +308,7 @@ void CrummySystemsImport(ecs_world_t *world, int id)
 
     ECS_SYSTEM(world, CrumbRenderer, EcsOnUpdate, Position, Crumb);
     ECS_SYSTEM(world, CrumbSimulator, EcsOnUpdate, Position, Velocity, Crumb);
-    ECS_SYSTEM(world, MouseCrumber, EcsOnUpdate, Position, Crumb);
+    ECS_SYSTEM(world, MouseCrumber, EcsOnUpdate, ?Position, ?Crumb);
     ECS_SYSTEM(world, Mover, EcsOnUpdate, Position, Velocity);
     ECS_SYSTEM(world, CameraSnapper, EcsOnUpdate, Position, Camera2D);
 
