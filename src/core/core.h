@@ -11,7 +11,7 @@
 
 #define ROOT2OVER2 0.7071
 
-typedef struct Camera2D CCamera;
+typedef struct Camera2D Camera2D;
 
 typedef struct Vector2 Position;
 

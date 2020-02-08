@@ -10,7 +10,7 @@
 #include "components.h"
 #include "systems.h"
 
-char * universe = "theuniverse.crummy";
+char *universe = "theuniverse.crummy";
 
 void init();
 
@@ -23,8 +23,13 @@ int main(int argc, char *argv[])
     ECS_IMPORT(world, CrummyComponents, 0);
     ECS_IMPORT(world, CrummySystems, 0);
 
+    Camera2D camera = {.target = (Vector2){0, 0},
+                       .offset = (Vector2){0, 0},
+                       .rotation = 0.0f,
+                       .zoom = 1.0f};
+
     SpawnCrumb(world, (Vector2){0, 512}, RockCrumb);
-    SpawnCCamera(world, (Vector2){0, 512});
+    SpawnCamera2D(world, (Vector2){0, 512}, &camera);
 
     ecs_set_target_fps(world, 60);
 
@@ -32,6 +37,7 @@ int main(int argc, char *argv[])
     {
         BeginDrawing();
         ClearBackground(DUSK);
+        BeginMode2D(camera);
         EndDrawing();
     }
 

@@ -243,8 +243,10 @@ void MouseCrumber(ecs_rows_t *rows)
 
 void ChunkManager(ecs_rows_t *rows)
 {
+    // XXX need playable column here
     Chunk * chunks = ecs_column(rows, Chunk, 1);
 
+    // for every chunk.
     for(int i = 0; i < rows->count; i++)
     {
 
@@ -283,6 +285,19 @@ void Mover(ecs_rows_t *rows)
     }
 }
 
+void CameraSnapper(ecs_rows_t *rows)
+{
+    Position *positions = ecs_column(rows, Position, 1);
+    Camera2D *cameras = ecs_column(rows, Camera2D, 2);
+
+
+    for(int i = 0; i < rows->count; i++)
+    {
+        printf("boom: %.2f, %.2f\n", positions[i].x, positions[i].y);
+        cameras[i].target = positions[i];
+    }
+}
+
 void CrummySystemsImport(ecs_world_t *world, int id)
 {
     ECS_MODULE(world, CrummySystems);
@@ -291,6 +306,8 @@ void CrummySystemsImport(ecs_world_t *world, int id)
     ECS_SYSTEM(world, CrumbSimulator, EcsOnUpdate, Position, Velocity, Crumb);
     ECS_SYSTEM(world, MouseCrumber, EcsOnUpdate, Position, Crumb);
     ECS_SYSTEM(world, Mover, EcsOnUpdate, Position, Velocity);
+    ECS_SYSTEM(world, CameraSnapper, EcsOnUpdate, Position, Camera2D);
+
     ECS_SYSTEM(world, Input, EcsOnUpdate, Velocity, Playable);
 
     ECS_SYSTEM(world, DebugHud, EcsOnUpdate, Position, Crumb);
@@ -298,6 +315,7 @@ void CrummySystemsImport(ecs_world_t *world, int id)
     ECS_SET_ENTITY(CrumbRenderer);
     ECS_SET_ENTITY(MouseCrumber);
     ECS_SET_ENTITY(CrumbSimulator);
+    ECS_SET_ENTITY(CameraSnapper);
     ECS_SET_ENTITY(Mover);
 }
 

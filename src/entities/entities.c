@@ -18,7 +18,7 @@ ecs_entity_t SpawnCrumb(ecs_world_t *world, Vector2 position, CrumbFlavor flavor
     return id;
 }
 
-ecs_entity_t SpawnCCamera(ecs_world_t * world, Vector2 position)
+ecs_entity_t SpawnCamera2D(ecs_world_t *world, Vector2 position, Camera2D * camera)
 {
     ecs_entity_t id = ecs_new(world, 0);
 
@@ -27,11 +27,7 @@ ecs_entity_t SpawnCCamera(ecs_world_t * world, Vector2 position)
     ecs_set(world, id, Position, {.x = position.x, .y = position.y});
     ecs_set(world, id, Velocity, {.x = 0, .y = 0});
 
-    ecs_set(world, id, CCamera,                                 \
-    {.target=position,                                          \
-    .offset=(Vector2){ WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2},  \
-    .rotation=0.0f,                                             \
-    .zoom=1.0f});
+    ecs_set_ptr(world, id, Camera2D, camera);
 
     ecs_add(world, id, Playable);
 
