@@ -26,14 +26,14 @@ void CrumbRenderer(ecs_rows_t *rows)
     printf("In renderer. Rows: %d\n", rows->count);
     printf("target: %.2f, %.2f\n", camera.target.x, camera.target.y);
 
-    DrawRectangle(camera.target.x+camera.offset.x, camera.target.y+camera.offset.y, CRUMB_SIZE, CRUMB_SIZE, FLAMINGO);
+    DrawRectangle(camera.target.x, camera.target.y, CRUMB_SIZE, CRUMB_SIZE, FLAMINGO);
 
     for (int i = 0; i < rows->count; i++)
     {
         int snapx = FloatToSnap(positions[i].x);
         int snapy = FloatToSnap(positions[i].y);
 
-        DrawRectangle(snapx, snapy, CRUMB_SIZE, CRUMB_SIZE, CrumbColorLookup[crumbs[i].flavor]);
+        DrawRectangle(snapx + camera.target.x, snapy + camera.target.y, CRUMB_SIZE, CRUMB_SIZE, CrumbColorLookup[crumbs[i].flavor]);
     }
 }
 
@@ -225,6 +225,9 @@ void MouseCrumber(ecs_rows_t *rows)
     if (crumbType != VoidCrumb)
     {
         Vector2 mousePosition = Vector2ToSnap(GetMousePosition());
+
+        mousePosition.x -= camera.target.x;        
+        mousePosition.y -= camera.target.y;
 
         Crumb *hitCrumb = NULL;
 
