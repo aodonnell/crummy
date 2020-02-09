@@ -263,12 +263,12 @@ void DebugHud(ecs_rows_t *rows)
 
     static bool show = false;
 
-    if(IsKeyPressed(KEY_Q))
+    if (IsKeyPressed(KEY_Q))
     {
         show = !show;
     }
 
-    if(show)
+    if (show)
     {
         char *message;
 
@@ -282,8 +282,14 @@ void DebugHud(ecs_rows_t *rows)
         DrawTextEx(FontAlagard, message, (Vector2){.x = 10, .y = 25}, 20, 2, BRIGHT_WHITES);
         free(message);
 
+        asprintf(&message, "World position: %.2f, %.2f\n", camera.offset.x, camera.offset.y);
+        DrawTextEx(FontAlagard, message, (Vector2){.x = 10, .y = 45}, 20, 2, BRIGHT_WHITES);
+        free(message);
+
+        BeginMode2D(camera);
         DrawLine(camera.target.x, camera.target.y - 11, camera.target.x, camera.target.y + 10, FLAMINGO);
         DrawLine(camera.target.x - 10, camera.target.y, camera.target.x + 10, camera.target.y, FLAMINGO);
+        EndMode2D();
     }
 }
 
@@ -305,6 +311,16 @@ void Mover(ecs_rows_t *rows)
     }
 }
 
+void CameraSnapper(ecs_rows_t *rows)
+{
+    Position *positions = ecs_column(rows, Position, 1);
+
+    camera.offset.x = positions[0].x;
+    camera.offset.y = positions[0].y;
+    camera.target.x = WINDOW_WIDTH_PX / 2 - camera.offset.x;
+    camera.target.y = WINDOW_HEIGHT_PX / 2 - camera.offset.y;
+}
+
 void CrummySystemsImport(ecs_world_t *world, int id)
 {
     ECS_MODULE(world, CrummySystems);
@@ -312,9 +328,10 @@ void CrummySystemsImport(ecs_world_t *world, int id)
     ECS_SYSTEM(world, CrumbRenderer, EcsOnUpdate, Position, Crumb);
     ECS_SYSTEM(world, CrumbSimulator, EcsOnUpdate, Position, Velocity, Crumb);
     ECS_SYSTEM(world, MouseCrumber, EcsOnUpdate, ?Position, ?Crumb);
-    ECS_SYSTEM(world, Mover, EcsOnUpdate, Position, Velocity);
+    ECS_SYSTEM(world, Mover, EcsOnUpdate, Position, Velocity, ?Playable);
 
     ECS_SYSTEM(world, Input, EcsOnUpdate, Velocity, Playable);
+    ECS_SYSTEM(world, CameraSnapper, EcsOnUpdate, Position, Playable);
 
     ECS_SYSTEM(world, DebugHud, EcsOnUpdate, Position, Crumb);
 
@@ -332,6 +349,8 @@ void Input(ecs_rows_t *rows)
     bool d = IsKeyDown(KEY_DOWN);
     bool l = IsKeyDown(KEY_LEFT);
     bool r = IsKeyDown(KEY_RIGHT);
+
+    float baseSpeed = 1 / camera.zoom;
 
     if (IsKeyDown(KEY_Z))
     {
@@ -355,39 +374,39 @@ void Input(ecs_rows_t *rows)
 
         if (u && l)
         {
-            targetVelocity.x = -ROOT2OVER2 * CRUMB_SIZE;
-            targetVelocity.y = -ROOT2OVER2 * CRUMB_SIZE;
+            targetVelocity.x = -ROOT2OVER2 * CRUMB_SIZE * baseSpeed;
+            targetVelocity.y = -ROOT2OVER2 * CRUMB_SIZE * baseSpeed;
         }
         else if (u && r)
         {
-            targetVelocity.x = ROOT2OVER2 * CRUMB_SIZE;
-            targetVelocity.y = -ROOT2OVER2 * CRUMB_SIZE;
+            targetVelocity.x = ROOT2OVER2 * CRUMB_SIZE * baseSpeed;
+            targetVelocity.y = -ROOT2OVER2 * CRUMB_SIZE * baseSpeed;
         }
         else if (u)
         {
-            targetVelocity.y = -CRUMB_SIZE;
+            targetVelocity.y = -CRUMB_SIZE * baseSpeed;
         }
         else if (d && l)
         {
-            targetVelocity.x = -ROOT2OVER2 * CRUMB_SIZE;
-            targetVelocity.y = ROOT2OVER2 * CRUMB_SIZE;
+            targetVelocity.x = -ROOT2OVER2 * CRUMB_SIZE * baseSpeed;
+            targetVelocity.y = ROOT2OVER2 * CRUMB_SIZE * baseSpeed;
         }
         else if (d && r)
         {
-            targetVelocity.x = ROOT2OVER2 * CRUMB_SIZE;
-            targetVelocity.y = ROOT2OVER2 * CRUMB_SIZE;
+            targetVelocity.x = ROOT2OVER2 * CRUMB_SIZE * baseSpeed;
+            targetVelocity.y = ROOT2OVER2 * CRUMB_SIZE * baseSpeed;
         }
         else if (d)
         {
-            targetVelocity.y = CRUMB_SIZE;
+            targetVelocity.y = CRUMB_SIZE * baseSpeed;
         }
         else if (l)
         {
-            targetVelocity.x = -CRUMB_SIZE;
+            targetVelocity.x = -CRUMB_SIZE * baseSpeed;
         }
         else if (r)
         {
-            targetVelocity.x = CRUMB_SIZE;
+            targetVelocity.x = CRUMB_SIZE * baseSpeed;
         }
         else
         {
@@ -395,13 +414,15 @@ void Input(ecs_rows_t *rows)
             targetVelocity.y = 0.0;
         }
 
-        // targetVelocity = Vector2Lerp(velocities[i], targetVelocity, 0.5);
+        if (IsKeyDown(KEY_LEFT_SHIFT))
+        {
+            targetVelocity.x *= 2;
+            targetVelocity.y *= 2;
+        }
+
+        targetVelocity = Vector2Lerp(velocities[i], targetVelocity, 0.5);
 
         velocities[i].x = targetVelocity.x;
         velocities[i].y = targetVelocity.y;
-
-        // HACK this only works because we only have one playable
-        camera.offset.x -= targetVelocity.x;
-        camera.offset.y -= targetVelocity.y;
     }
 }
