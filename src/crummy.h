@@ -4,8 +4,8 @@
 #include <raylib.h>
 #include <unqlite.h>
 
-#define WINDOW_HEIGHT_PX 512
-#define WINDOW_WIDTH_PX 512
+#define WINDOW_HEIGHT_PX 720
+#define WINDOW_WIDTH_PX 1080
 
 #define CRUMB_SIZE 8 
 
@@ -15,8 +15,11 @@
 
 #define DANK_FACTOR 0.24
 
+#define MAX_ZOOM 5
+#define MIN_ZOOM 0.5
+
 Font FontAlagard;
-Vector2 camera;
+Camera2D camera;
 
 extern char * universe;
 
