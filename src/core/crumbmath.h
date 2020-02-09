@@ -5,6 +5,12 @@
 
 Vector2 Vector2Lerp(Vector2 current, Vector2 target, float by);
 
+int SnapToCrumbX(float snapX);
+
+int SnapToCrumbY(float snapY);
+
+Vector2 SnapToCrumb(Vector2 snap);
+
 int WorldToSnapX(float worldX);
 
 int WorldToSnapY(float worldY);

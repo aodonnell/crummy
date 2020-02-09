@@ -290,9 +290,9 @@ void DebugHud(ecs_rows_t *rows)
         DrawTextEx(FontAlagard, message, (Vector2){.x = 10, .y = 45}, 20, 2, BRIGHT_WHITES);
         free(message);
 
-        Vector2 screenPostion = WorldToScreen(worldPosition);
+        Vector2 crumbPosition = SnapToCrumb(mousePosition);
 
-        asprintf(&message, "Screen position: %.2f, %.2f\n", screenPostion.x, screenPostion.y);
+        asprintf(&message, "Crumb position: %.2f, %.2f\n", crumbPosition.x, crumbPosition.y);
         DrawTextEx(FontAlagard, message, (Vector2){.x = 10, .y = 65}, 20, 2, BRIGHT_WHITES);
         free(message);
 

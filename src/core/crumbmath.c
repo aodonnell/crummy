@@ -5,6 +5,24 @@
 
 #include "crummy.h"
 
+int SnapToCrumbX(float snapX)
+{
+    return snapX / CRUMB_SIZE;
+}
+
+int SnapToCrumbY(float snapY)
+{
+    return snapY / CRUMB_SIZE;
+}
+
+Vector2 SnapToCrumb(Vector2 snap)
+{
+    snap.x = SnapToCrumbX(snap.x);
+    snap.y = SnapToCrumbY(snap.y);
+
+    return snap;
+}
+
 int WorldToSnapX(float worldX)
 {
     float crumbSize = CRUMB_SIZE;
