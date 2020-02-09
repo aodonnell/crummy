@@ -8,7 +8,6 @@
 #include "handling.h"
 #include "colors.h"
 
-
 #define ROOT2OVER2 0.7071
 
 typedef struct Camera2D Camera2D;
@@ -26,29 +25,11 @@ typedef enum _crumb_flavor
     PlantCrumb,
 } CrumbFlavor;
 
-typedef struct _crumb 
+typedef struct _crumb
 {
     CrumbFlavor flavor;
 } Crumb;
 
 extern Color CrumbColorLookup[];
-
-int FloatToSnapX(float pos);
-
-int FloatToSnapY(float pos);
-
-Vector2 Vector2ToSnap(Vector2 pos);
-
-int RandInRange(int low, int high);
-
-Vector2 Vector2Lerp(Vector2 current, Vector2 target, float by);
-
-float ScreenToWorldX(float screenX);
-
-float ScreenToWorldY(float screenY);
-
-Vector2 ScreenToWorldPosition(Vector2 screenPosition);
-
-double Rand01();
 
 #endif

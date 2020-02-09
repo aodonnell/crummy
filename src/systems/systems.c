@@ -6,6 +6,7 @@
 
 #include "colors.h"
 #include "crummy.h"
+#include "crumbmath.h"
 
 #include "core.h"
 
@@ -221,8 +222,7 @@ void MouseCrumber(ecs_rows_t *rows)
     {
         Vector2 mousePosition = GetMousePosition();
 
-        mousePosition = ScreenToWorldPosition(mousePosition);
-        mousePosition = Vector2ToSnap(mousePosition);
+        mousePosition = ScreenToSnap(mousePosition);
 
         Crumb *hitCrumb = NULL;
 
@@ -278,12 +278,22 @@ void DebugHud(ecs_rows_t *rows)
 
         Vector2 mousePosition = GetMousePosition();
 
+        mousePosition = ScreenToSnap(mousePosition);
+
         asprintf(&message, "Mouse position: %.2f, %.2f\n", mousePosition.x, mousePosition.y);
         DrawTextEx(FontAlagard, message, (Vector2){.x = 10, .y = 25}, 20, 2, BRIGHT_WHITES);
         free(message);
 
-        asprintf(&message, "World position: %.2f, %.2f\n", camera.offset.x, camera.offset.y);
+        Vector2 worldPosition = ScreenToWorld(mousePosition);
+
+        asprintf(&message, "World position: %.2f, %.2f\n", worldPosition.x, worldPosition.y);
         DrawTextEx(FontAlagard, message, (Vector2){.x = 10, .y = 45}, 20, 2, BRIGHT_WHITES);
+        free(message);
+
+        Vector2 screenPostion = WorldToScreen(worldPosition);
+
+        asprintf(&message, "Screen position: %.2f, %.2f\n", screenPostion.x, screenPostion.y);
+        DrawTextEx(FontAlagard, message, (Vector2){.x = 10, .y = 65}, 20, 2, BRIGHT_WHITES);
         free(message);
 
         BeginMode2D(camera);
