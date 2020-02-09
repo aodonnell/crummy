@@ -41,7 +41,7 @@ bool CrumbsHitting(Position crumba, Position crumbb)
 
 int FloatToSnap(float pos)
 {
-    return (int)(pos - (int)pos % CRUMB_SIZE);
+    return (int)(pos - (int)pos % (int)(CRUMB_SIZE*camera.zoom));
 }
 
 Vector2 Vector2ToSnap(Vector2 pos)

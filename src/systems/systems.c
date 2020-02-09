@@ -24,29 +24,19 @@ void CrumbRenderer(ecs_rows_t *rows)
 
     Vector2 mousePosition = GetMousePosition();
 
-    // printf("target: %.2f, %.2f\n", camera.target.x, camera.target.y);
-
-
     BeginMode2D(camera);
-
-    mousePosition.x = (mousePosition.x - camera.target.x - camera.offset.x)/camera.zoom + camera.target.x;
-    mousePosition.y = (mousePosition.y - camera.target.y - camera.offset.y)/camera.zoom + camera.target.y;
-    
-    DrawRectangle(mousePosition.x, mousePosition.y, CRUMB_SIZE, CRUMB_SIZE, RISE_AND_SHINE);
 
     for (int i = 0; i < rows->count; i++)
     {
-        int snapx = FloatToSnap(positions[i].x);
-        int snapy = FloatToSnap(positions[i].y);
+        // int snapx = FloatToSnap(positions[i].x);
+        // int snapy = FloatToSnap(positions[i].y);
+        int snapx = positions[i].x;
+        int snapy = positions[i].y;
 
-        // DrawRectangle(snapx + camera.x, snapy + camera.y, CRUMB_SIZE, CRUMB_SIZE, CrumbColorLookup[crumbs[i].flavor]);
         DrawRectangle(snapx, snapy, CRUMB_SIZE, CRUMB_SIZE, CrumbColorLookup[crumbs[i].flavor]);
     }
 
     EndMode2D();
-
-    DrawLine(camera.target.x, camera.target.y - 11, camera.target.x, camera.target.y + 10, FLAMINGO);
-    DrawLine(camera.target.x - 10, camera.target.y, camera.target.x + 10, camera.target.y, FLAMINGO);
 }
 
 void CrumbSimulator(ecs_rows_t *rows)
@@ -276,7 +266,7 @@ void DebugHud(ecs_rows_t *rows)
     Position *positions = ecs_column(rows, Position, 1);
     Crumb *crumbs = ecs_column(rows, Crumb, 2);
 
-    static bool show = true;
+    static bool show = false;
 
     if(IsKeyPressed(KEY_Q))
     {
@@ -296,6 +286,9 @@ void DebugHud(ecs_rows_t *rows)
         asprintf(&message, "Mouse position: %.2f, %.2f\n", mousePosition.x, mousePosition.y);
         DrawTextEx(FontAlagard, message, (Vector2){.x = 10, .y = 25}, 20, 2, BRIGHT_WHITES);
         free(message);
+
+        DrawLine(camera.target.x, camera.target.y - 11, camera.target.x, camera.target.y + 10, FLAMINGO);
+        DrawLine(camera.target.x - 10, camera.target.y, camera.target.x + 10, camera.target.y, FLAMINGO);
     }
 }
 
