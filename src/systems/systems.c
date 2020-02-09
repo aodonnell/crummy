@@ -28,12 +28,7 @@ void CrumbRenderer(ecs_rows_t *rows)
 
     for (int i = 0; i < rows->count; i++)
     {
-        // int snapx = FloatToSnap(positions[i].x);
-        // int snapy = FloatToSnap(positions[i].y);
-        int snapx = positions[i].x;
-        int snapy = positions[i].y;
-
-        DrawRectangle(snapx, snapy, CRUMB_SIZE, CRUMB_SIZE, CrumbColorLookup[crumbs[i].flavor]);
+        DrawRectangle(positions[i].x, positions[i].y, CRUMB_SIZE, CRUMB_SIZE, CrumbColorLookup[crumbs[i].flavor]);
     }
 
     EndMode2D();
@@ -224,10 +219,10 @@ void MouseCrumber(ecs_rows_t *rows)
 
     if (crumbType != VoidCrumb)
     {
-        Vector2 mousePosition = Vector2ToSnap(GetMousePosition());
+        Vector2 mousePosition = GetMousePosition();
 
-        mousePosition.x = (mousePosition.x - camera.target.x - camera.offset.x)/camera.zoom + camera.target.x;
-        mousePosition.y = (mousePosition.y - camera.target.y - camera.offset.y)/camera.zoom + camera.target.y;
+        mousePosition = ScreenToWorldPosition(mousePosition);
+        mousePosition = Vector2ToSnap(mousePosition);
 
         Crumb *hitCrumb = NULL;
 
@@ -406,7 +401,7 @@ void Input(ecs_rows_t *rows)
         velocities[i].y = targetVelocity.y;
 
         // HACK this only works because we only have one playable
-        camera.offset.x += targetVelocity.x;
-        camera.offset.y += targetVelocity.y;
+        camera.offset.x -= targetVelocity.x;
+        camera.offset.y -= targetVelocity.y;
     }
 }

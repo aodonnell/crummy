@@ -31,25 +31,52 @@ bool CrumbsHitting(Position crumba, Position crumbb)
     //  |____|      |
     //       |______|
 
-    int asnapx = FloatToSnap(crumba.x);
-    int asnapy = FloatToSnap(crumba.y);
-    int bsnapx = FloatToSnap(crumbb.x);
-    int bsnapy = FloatToSnap(crumbb.y);
+    int asnapx = FloatToSnapX(crumba.x);
+    int asnapy = FloatToSnapY(crumba.y);
+    int bsnapx = FloatToSnapX(crumbb.x);
+    int bsnapy = FloatToSnapY(crumbb.y);
 
     return (asnapx == bsnapx && asnapy == bsnapy);
 }
 
-int FloatToSnap(float pos)
+int FloatToSnapX(float pos)
 {
-    return (int)(pos - (int)pos % (int)(CRUMB_SIZE*camera.zoom));
+    float crumbSize = CRUMB_SIZE;
+    
+    return (int)(pos - (int)pos % (int)(crumbSize));
+}
+
+int FloatToSnapY(float pos)
+{
+    float crumbSize = CRUMB_SIZE;
+    
+    return (int)(pos - (int)pos % (int)(crumbSize));
 }
 
 Vector2 Vector2ToSnap(Vector2 pos)
 {
-    pos.x = FloatToSnap(pos.x);
-    pos.y = FloatToSnap(pos.y);
+    pos.x = FloatToSnapX(pos.x);
+    pos.y = FloatToSnapY(pos.y);
 
     return pos;
+}
+
+float ScreenToWorldX(float screenX)
+{
+    return (screenX - camera.target.x - camera.offset.x)/camera.zoom + camera.target.x;
+}
+
+float ScreenToWorldY(float screenY)
+{
+    return (screenY - camera.target.y - camera.offset.y)/camera.zoom + camera.target.y;
+}
+
+Vector2 ScreenToWorldPosition(Vector2 screenPosition)
+{
+    screenPosition.x = ScreenToWorldX(screenPosition.x);
+    screenPosition.y = ScreenToWorldY(screenPosition.y);
+
+    return screenPosition;
 }
 
 int RandInRange(int low, int high)

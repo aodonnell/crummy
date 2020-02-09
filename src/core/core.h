@@ -33,12 +33,21 @@ typedef struct _crumb
 
 extern Color CrumbColorLookup[];
 
-int FloatToSnap(float pos);
+int FloatToSnapX(float pos);
+
+int FloatToSnapY(float pos);
+
 Vector2 Vector2ToSnap(Vector2 pos);
 
 int RandInRange(int low, int high);
 
 Vector2 Vector2Lerp(Vector2 current, Vector2 target, float by);
+
+float ScreenToWorldX(float screenX);
+
+float ScreenToWorldY(float screenY);
+
+Vector2 ScreenToWorldPosition(Vector2 screenPosition);
 
 double Rand01();
 
