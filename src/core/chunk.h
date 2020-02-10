@@ -9,11 +9,13 @@
 typedef struct _chunk
 {
     Vector2 corner;
-    Crumb * crumbData;
+    Crumb *crumbData;
 } Chunk;
 
-Vector4 world_to_chunk_position(Vector2 worldPosition);
+// Vector4 world_to_chunk_position(Vector2 worldPosition);
 
-Vector2 chunk_at(Vector2 worldPosition);
+ecs_entity_t chunk_at(Vector2 worldPosition);
+
+void handle_chunk_click(ecs_world_t *world, ecs_entity_t chunkEntity, Chunk *chunkComponent, Vector2 worldPosition);
 
 #endif

@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <flecs.h>
+
 #include "core.h"
 #include "crumbmath.h"
 #include "crummy.h"
@@ -21,4 +23,7 @@ Color CrumbColorLookup[] =
 
         // Plant
         SOMETHING_GREEN,
+
+        // Loud
+        FLAMINGO,
 };

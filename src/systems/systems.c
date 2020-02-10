@@ -187,8 +187,10 @@ void CrumbSimulator(ecs_rows_t *rows)
 
 void MouseCrumber(ecs_rows_t *rows)
 {
-    Position *positions = ecs_column(rows, Position, 1);
-    Crumb *crumbs = ecs_column(rows, Crumb, 2);
+    // Position *positions = ecs_column(rows, Position, 1);
+    // Crumb *crumbs = ecs_column(rows, Crumb, 2);
+
+    Chunk *chunks = ecs_column(rows, Chunk, 1);
 
     bool rightDown = IsMouseButtonDown(MOUSE_RIGHT_BUTTON);
     bool leftDown = IsMouseButtonDown(MOUSE_LEFT_BUTTON);
@@ -222,26 +224,24 @@ void MouseCrumber(ecs_rows_t *rows)
     {
         Vector2 mousePosition = GetMousePosition();
 
-        mousePosition = screen_to_snap(mousePosition);
+        // mousePosition = screen_to_snap(mousePosition);
 
-        Crumb *hitCrumb = NULL;
+        // int hitChunk = chunk_at(mousePosition);
 
-        // int crumb = CrumbAt(mousePosition);
+        for (int i = 0; i < rows->count; i++)
+        {
+            handle_chunk_click(rows->world, rows->entities[i], &chunks[i], screen_to_world(mousePosition));
+        }
 
-        // if (crumb > 0)
+        // if (hitChunk >= 0)
         // {
-        //     hitCrumb = &crumbs[crumb];
+        //     // Instead of deleting and making another crumb we just alter the one we hit
+        //     // hitCrumb->flavor = crumbType;
         // }
-
-        if (hitCrumb)
-        {
-            // Instead of deleting and making another crumb we just alter the one we hit
-            hitCrumb->flavor = crumbType;
-        }
-        else
-        {
-            SpawnCrumb(rows->world, mousePosition, crumbType);
-        }
+        // else
+        // {
+        //     spawn_crumb(rows->world, 0, mousePosition, crumbType);
+        // }
     }
 }
 
@@ -258,10 +258,9 @@ void ChunkManager(ecs_rows_t *rows)
 
 void DebugHud(ecs_rows_t *rows)
 {
-    Position *positions = ecs_column(rows, Position, 1);
-    Crumb *crumbs = ecs_column(rows, Crumb, 2);
+    // Crumb *crumbs = ecs_column(rows, Crumb, 1);
 
-    static bool show = false;
+    static bool show = true;
 
     if (IsKeyPressed(KEY_Q))
     {
@@ -278,7 +277,7 @@ void DebugHud(ecs_rows_t *rows)
 
         Vector2 mousePosition = GetMousePosition();
 
-        mousePosition = screen_to_snap(mousePosition);
+        // mousePosition = screen_to_snap(mousePosition);
 
         asprintf(&message, "Mouse position: %.2f, %.2f\n", mousePosition.x, mousePosition.y);
         DrawTextEx(FontAlagard, message, (Vector2){.x = 10, .y = 25}, 20, 2, BRIGHT_WHITES);
@@ -290,10 +289,17 @@ void DebugHud(ecs_rows_t *rows)
         DrawTextEx(FontAlagard, message, (Vector2){.x = 10, .y = 45}, 20, 2, BRIGHT_WHITES);
         free(message);
 
-        Vector2 crumbPosition = snap_to_crumb(mousePosition);
+        Vector2 snapPostion = world_to_snap(worldPosition);
+        Vector2 crumbPosition = snap_to_crumb(snapPostion);
 
         asprintf(&message, "Crumb position: %.2f, %.2f\n", crumbPosition.x, crumbPosition.y);
         DrawTextEx(FontAlagard, message, (Vector2){.x = 10, .y = 65}, 20, 2, BRIGHT_WHITES);
+        free(message);
+
+        Vector2 chunkPosition = world_to_chunk(worldPosition);
+
+        asprintf(&message, "Chunk position: %.2f, %.2f\n", chunkPosition.x, chunkPosition.y);
+        DrawTextEx(FontAlagard, message, (Vector2){.x = 10, .y = 85}, 20, 2, BRIGHT_WHITES);
         free(message);
 
         BeginMode2D(camera);
@@ -337,13 +343,13 @@ void CrummySystemsImport(ecs_world_t *world, int id)
 
     ECS_SYSTEM(world, CrumbRenderer, EcsOnUpdate, Position, Crumb);
     ECS_SYSTEM(world, CrumbSimulator, EcsOnUpdate, Position, Velocity, Crumb);
-    ECS_SYSTEM(world, MouseCrumber, EcsOnUpdate, ?Position, ?Crumb);
+    ECS_SYSTEM(world, MouseCrumber, EcsOnUpdate, Chunk);
     ECS_SYSTEM(world, Mover, EcsOnUpdate, Position, Velocity, ?Playable);
 
     ECS_SYSTEM(world, Input, EcsOnUpdate, Velocity, Playable);
     ECS_SYSTEM(world, CameraSnapper, EcsOnUpdate, Position, Playable);
 
-    ECS_SYSTEM(world, DebugHud, EcsOnUpdate, Position, Crumb);
+    ECS_SYSTEM(world, DebugHud, EcsOnUpdate);
 
     ECS_SET_ENTITY(CrumbRenderer);
     ECS_SET_ENTITY(MouseCrumber);

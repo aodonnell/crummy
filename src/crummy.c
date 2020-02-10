@@ -23,14 +23,16 @@ int main(int argc, char *argv[])
     ECS_IMPORT(world, CrummyComponents, 0);
     ECS_IMPORT(world, CrummySystems, 0);
 
-    camera.target = (Vector2){WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2};
+    camera.target = (Vector2){WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2};
     camera.offset = (Vector2){0, 0};
     camera.rotation = 0.0f;
     camera.zoom = 1.0f;
 
+    spawn_crumb(world, 0, (Vector2){0, 512}, RockCrumb);
 
-    // SpawnCrumb(world, (Vector2){0, 512}, RockCrumb);
-    SpawnCamera2D(world, (Vector2){WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2}, &camera);
+    the_lone_chunk = spawn_chunk(world, (Vector2){0, 0}, NULL);
+
+    spawn_camera_2d(world, (Vector2){WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2}, &camera);
 
     ecs_set_target_fps(world, 60);
 

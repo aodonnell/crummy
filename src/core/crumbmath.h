@@ -29,6 +29,12 @@ float world_to_screen_y(float worldY);
 
 Vector2 world_to_screen(Vector2 world);
 
+float world_to_chunk_x(float worldX);
+
+float world_to_chunk_y(float worldY);
+
+Vector2 world_to_chunk(Vector2 world);
+
 float screen_to_snap_x(float screenX);
 
 float screen_to_snap_y(float screenY);

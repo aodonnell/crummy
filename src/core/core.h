@@ -23,6 +23,7 @@ typedef enum _crumb_flavor
     SandCrumb,
     WaterCrumb,
     PlantCrumb,
+    LoudCrumb,
 } CrumbFlavor;
 
 typedef struct _crumb

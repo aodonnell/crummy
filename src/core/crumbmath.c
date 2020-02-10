@@ -81,6 +81,27 @@ Vector2 world_to_screen(Vector2 world)
     return world;
 }
 
+float world_to_chunk_x(float worldX)
+{
+    // return (int)(worldX - (int)worldX % (int)(CHUNK_SIZE))/;
+    return world_to_snap_x(worldX) / (CHUNK_SIZE * CRUMB_SIZE);
+}
+
+float world_to_chunk_y(float worldY)
+{
+
+    // return (int)(worldY - (int)worldY % (int)(CHUNK_SIZE))/;
+    return world_to_snap_y(worldY) / (CHUNK_SIZE * CRUMB_SIZE);
+}
+
+Vector2 world_to_chunk(Vector2 world)
+{
+    world.x = world_to_chunk_x(world.x);
+    world.y = world_to_chunk_y(world.y);
+
+    return world;
+}
+
 float screen_to_snap_x(float screenX)
 {
     return world_to_snap_x(screen_to_world_x(screenX));
