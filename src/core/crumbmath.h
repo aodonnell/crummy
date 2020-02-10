@@ -5,38 +5,37 @@
 
 Vector2 Vector2Lerp(Vector2 current, Vector2 target, float by);
 
-int SnapToCrumbX(float snapX);
+int snap_to_crumb_x(float snapX);
 
-int SnapToCrumbY(float snapY);
+int snap_to_crumb_y(float snapY);
 
-Vector2 SnapToCrumb(Vector2 snap);
+Vector2 snap_to_crumb(Vector2 snap);
 
-int WorldToSnapX(float worldX);
+int world_to_snap_x(float worldX);
 
-int WorldToSnapY(float worldY);
+int world_to_snap_y(float worldY);
 
-Vector2 WorldToSnap(Vector2 world);
+Vector2 world_to_snap(Vector2 world);
 
-float ScreenToWorldX(float screenX);
+float screen_to_world_x(float screenX);
 
-float ScreenToWorldY(float screenY);
+float screen_to_world_y(float screenY);
 
-Vector2 ScreenToWorld(Vector2 screen);
+Vector2 screen_to_world(Vector2 screen);
 
-float ScreenToSnapX(float screenX);
+float world_to_screen_x(float worldX);
 
-float ScreenToSnapY(float screenY);
+float world_to_screen_y(float worldY);
 
-Vector2 ScreenToSnap(Vector2 screen);
+Vector2 world_to_screen(Vector2 world);
 
-float WorldToScreenX(float worldX);
+float screen_to_snap_x(float screenX);
 
-float WorldToScreenY(float worldY);
+float screen_to_snap_y(float screenY);
 
-Vector2 WorldToScreen(Vector2 world);
+Vector2 screen_to_snap(Vector2 screen);
 
-int RandInRange(int low, int high);
+int rand_in_range(int low, int high);
 
-double Rand01();
-
+double rand01();
 #endif

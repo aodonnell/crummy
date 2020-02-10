@@ -81,7 +81,7 @@ void CrumbSimulator(ecs_rows_t *rows)
             //     {
             //         crumbs[s].flavor = SandCrumb;
             //     }
-            //     else if((sewater && swwater && Rand01() < 0.5) || (sewater && !swwater))
+            //     else if((sewater && swwater && rand01() < 0.5) || (sewater && !swwater))
             //     {
             //         crumbs[se].flavor = SandCrumb;
             //     }
@@ -105,7 +105,7 @@ void CrumbSimulator(ecs_rows_t *rows)
                 targetV.x = 0;
                 targetV.y = baseSpeed;
             }
-            else if ((sw && se && Rand01() > 0.5) || (sw && !se))
+            else if ((sw && se && rand01() > 0.5) || (sw && !se))
             {
                 targetV.x = -ROOT2OVER2 * baseSpeed;
                 targetV.y = ROOT2OVER2 * baseSpeed;
@@ -128,7 +128,7 @@ void CrumbSimulator(ecs_rows_t *rows)
 
             if ((se >= 0 && crumbs[se].flavor == PlantCrumb) || (sw >= 0 && crumbs[sw].flavor == PlantCrumb) || (s >= 0 && crumbs[s].flavor == PlantCrumb))
             {
-                if (Rand01() < DANK_FACTOR)
+                if (rand01() < DANK_FACTOR)
                 {
                     crumbs[i].flavor = PlantCrumb;
                     velocities[i].x = 0;
@@ -149,7 +149,7 @@ void CrumbSimulator(ecs_rows_t *rows)
                 targetV.x = 0;
                 targetV.y = baseSpeed;
             }
-            else if ((sw && se && Rand01() > 0.5) || (sw && !se))
+            else if ((sw && se && rand01() > 0.5) || (sw && !se))
             {
                 targetV.x = -ROOT2OVER2 * baseSpeed;
                 targetV.y = ROOT2OVER2 * baseSpeed;
@@ -159,7 +159,7 @@ void CrumbSimulator(ecs_rows_t *rows)
                 targetV.x = ROOT2OVER2 * baseSpeed;
                 targetV.y = ROOT2OVER2 * baseSpeed;
             }
-            else if ((e && w && Rand01() > 0.5) || (e && !w))
+            else if ((e && w && rand01() > 0.5) || (e && !w))
             {
                 targetV.x = baseSpeed;
                 targetV.y = 0;
@@ -222,7 +222,7 @@ void MouseCrumber(ecs_rows_t *rows)
     {
         Vector2 mousePosition = GetMousePosition();
 
-        mousePosition = ScreenToSnap(mousePosition);
+        mousePosition = screen_to_snap(mousePosition);
 
         Crumb *hitCrumb = NULL;
 
@@ -278,19 +278,19 @@ void DebugHud(ecs_rows_t *rows)
 
         Vector2 mousePosition = GetMousePosition();
 
-        mousePosition = ScreenToSnap(mousePosition);
+        mousePosition = screen_to_snap(mousePosition);
 
         asprintf(&message, "Mouse position: %.2f, %.2f\n", mousePosition.x, mousePosition.y);
         DrawTextEx(FontAlagard, message, (Vector2){.x = 10, .y = 25}, 20, 2, BRIGHT_WHITES);
         free(message);
 
-        Vector2 worldPosition = ScreenToWorld(mousePosition);
+        Vector2 worldPosition = screen_to_world(mousePosition);
 
         asprintf(&message, "World position: %.2f, %.2f\n", worldPosition.x, worldPosition.y);
         DrawTextEx(FontAlagard, message, (Vector2){.x = 10, .y = 45}, 20, 2, BRIGHT_WHITES);
         free(message);
 
-        Vector2 crumbPosition = SnapToCrumb(mousePosition);
+        Vector2 crumbPosition = snap_to_crumb(mousePosition);
 
         asprintf(&message, "Crumb position: %.2f, %.2f\n", crumbPosition.x, crumbPosition.y);
         DrawTextEx(FontAlagard, message, (Vector2){.x = 10, .y = 65}, 20, 2, BRIGHT_WHITES);

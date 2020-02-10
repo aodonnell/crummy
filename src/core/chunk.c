@@ -41,7 +41,7 @@ ecs_entity_t ReadChunk(Vector2 chunkPosition)
 {
 }
 
-ecs_entity_t GenChunk()
+ecs_entity_t GenChunk(Vector2 chunkPosition)
 {
 }
 
