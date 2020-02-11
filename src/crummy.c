@@ -35,6 +35,8 @@ int main(int argc, char *argv[])
     the_lone_chunk = spawn_chunk(world, (Vector2){-1, 1}, NULL);
     the_lone_chunk = spawn_chunk(world, (Vector2){1, -1}, NULL);
     the_lone_chunk = spawn_chunk(world, (Vector2){-1, -1}, NULL);
+    the_lone_chunk = spawn_chunk(world, (Vector2){-2, 0}, NULL);
+    the_lone_chunk = spawn_chunk(world, (Vector2){0, -2}, NULL);
 
     spawn_camera_2d(world, (Vector2){WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2}, &camera);
 

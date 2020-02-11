@@ -354,6 +354,7 @@ void CrummySystemsImport(ecs_world_t *world, int id)
 {
     ECS_MODULE(world, CrummySystems);
 
+    ECS_SYSTEM(world, ChunkRenderer, EcsOnUpdate, Chunk);
     ECS_SYSTEM(world, CrumbRenderer, EcsOnUpdate, Position, Crumb);
     ECS_SYSTEM(world, CrumbSimulator, EcsOnUpdate, Position, Velocity, Crumb);
     ECS_SYSTEM(world, MouseCrumber, EcsOnUpdate, Chunk);
@@ -361,7 +362,6 @@ void CrummySystemsImport(ecs_world_t *world, int id)
 
     ECS_SYSTEM(world, Input, EcsOnUpdate, Velocity, Playable);
     ECS_SYSTEM(world, CameraSnapper, EcsOnUpdate, Position, Playable);
-    ECS_SYSTEM(world, ChunkRenderer, EcsOnUpdate, Chunk);
 
     ECS_SYSTEM(world, DebugHud, EcsOnUpdate);
 

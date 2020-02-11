@@ -7,12 +7,12 @@
 
 int snap_to_crumb_x(float snapX)
 {
-    return snapX / CRUMB_SIZE - (snapX < 0 ? 1 : 0);
+    return snapX / CRUMB_SIZE;
 }
 
 int snap_to_crumb_y(float snapY)
 {
-    return snapY / CRUMB_SIZE - (snapY < 0 ? 1 : 0);
+    return snapY / CRUMB_SIZE;
 }
 
 Vector2 snap_to_crumb(Vector2 snap)
@@ -27,14 +27,14 @@ int world_to_snap_x(float worldX)
 {
     float crumbSize = CRUMB_SIZE;
 
-    return (int)(worldX - (int)worldX % (int)(crumbSize)) - (worldX < 0 ? 1 : 0);
+    return (int)(worldX - (int)worldX % (int)(crumbSize)) - CRUMB_SIZE * (worldX < 0 ? 1 : 0);
 }
 
 int world_to_snap_y(float worldY)
 {
     float crumbSize = CRUMB_SIZE;
 
-    return (int)(worldY - (int)worldY % (int)(crumbSize)) - (worldY < 0 ? 1 : 0);
+    return (int)(worldY - (int)worldY % (int)(crumbSize)) - CRUMB_SIZE * (worldY < 0 ? 1 : 0);
 }
 
 Vector2 world_to_snap(Vector2 world)
@@ -83,13 +83,12 @@ Vector2 world_to_screen(Vector2 world)
 
 float world_to_chunk_x(float worldX)
 {
-    return world_to_snap_x(worldX) / (CHUNK_SIZE * CRUMB_SIZE) - (worldX < 0 ? 1 : 0);
+    return (int)(worldX - (int)worldX % (int)(CRUMB_SIZE)) / (CHUNK_SIZE * CRUMB_SIZE) - (worldX < 0 ? 1 : 0);
 }
 
 float world_to_chunk_y(float worldY)
 {
-
-    return world_to_snap_y(worldY) / (CHUNK_SIZE * CRUMB_SIZE) - (worldY < 0 ? 1 : 0);
+    return (int)(worldY - (int)worldY % (int)(CRUMB_SIZE)) / (CHUNK_SIZE * CRUMB_SIZE) - (worldY < 0 ? 1 : 0);
 }
 
 Vector2 world_to_chunk(Vector2 world)
