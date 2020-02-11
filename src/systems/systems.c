@@ -43,7 +43,8 @@ void ChunkRenderer(ecs_rows_t *rows)
 
     for (int i = 0; i < rows->count; i++)
     {
-        DrawRectangle(chunks[i].corner.x * l, chunks[i].corner.y * l, l, l, chunks[i].color);
+        Vector2 worldPosition = chunk_to_world(chunks[i].corner);
+        DrawRectangle(worldPosition.x, worldPosition.y, l, l, chunks[i].color);
     }
 
     EndMode2D();
@@ -313,6 +314,12 @@ void DebugHud(ecs_rows_t *rows)
 
         asprintf(&message, "Chunk position: %.2f, %.2f\n", chunkPosition.x, chunkPosition.y);
         DrawTextEx(FontAlagard, message, (Vector2){.x = 10, .y = 85}, 20, 2, BRIGHT_WHITES);
+        free(message);
+
+        Vector4 dad = world_to_chunk_and_crumb(worldPosition);
+
+        asprintf(&message, "Chunk and crumb position: %.2f, %.2f, %.2f, %.2f\n", dad.x, dad.y, dad.z, dad.w);
+        DrawTextEx(FontAlagard, message, (Vector2){.x = 10, .y = 105}, 20, 2, BRIGHT_WHITES);
         free(message);
 
         BeginMode2D(camera);

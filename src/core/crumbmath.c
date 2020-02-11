@@ -23,18 +23,32 @@ Vector2 snap_to_crumb(Vector2 snap)
     return snap;
 }
 
+int world_to_crumb_x(float worldX)
+{
+    return snap_to_crumb_x(world_to_snap_x(worldX));
+}
+
+int world_to_crumb_y(float worldY)
+{
+    return snap_to_crumb_y(world_to_snap_y(worldY));
+}
+
+Vector2 world_to_crumb(Vector2 world)
+{
+    world.x = world_to_crumb_x(world.x);
+    world.y = world_to_crumb_y(world.y);
+
+    return world;
+}
+
 int world_to_snap_x(float worldX)
 {
-    float crumbSize = CRUMB_SIZE;
-
-    return (int)(worldX - (int)worldX % (int)(crumbSize)) - CRUMB_SIZE * (worldX < 0 ? 1 : 0);
+    return (int)(worldX - (int)worldX % (int)(CRUMB_SIZE)) - CRUMB_SIZE * (worldX < 0 ? 1 : 0);
 }
 
 int world_to_snap_y(float worldY)
 {
-    float crumbSize = CRUMB_SIZE;
-
-    return (int)(worldY - (int)worldY % (int)(crumbSize)) - CRUMB_SIZE * (worldY < 0 ? 1 : 0);
+    return (int)(worldY - (int)worldY % (int)(CRUMB_SIZE)) - CRUMB_SIZE * (worldY < 0 ? 1 : 0);
 }
 
 Vector2 world_to_snap(Vector2 world)
@@ -97,6 +111,36 @@ Vector2 world_to_chunk(Vector2 world)
     world.y = world_to_chunk_y(world.y);
 
     return world;
+}
+
+float chunk_to_world_x(float chunkX)
+{
+    return chunkX * CHUNK_SIZE * CRUMB_SIZE;
+}
+
+float chunk_to_world_y(float chunkY)
+{
+    return chunkY * CHUNK_SIZE * CRUMB_SIZE;
+}
+
+Vector2 chunk_to_world(Vector2 chunk)
+{
+    chunk.x = chunk_to_world_x(chunk.x);
+    chunk.y = chunk_to_world_x(chunk.y);
+
+    return chunk;
+}
+
+Vector4 world_to_chunk_and_crumb(Vector2 world)
+{
+    int x, y, z, w;
+
+    x = world_to_chunk_x(world.x);
+    y = world_to_chunk_y(world.y);
+    z = world_to_crumb_x(world.x - chunk_to_world_x(x));
+    w = world_to_crumb_y(world.y - chunk_to_world_x(y));
+
+    return (Vector4){.x = x, .y = y, .z = z, .w = w};
 }
 
 float screen_to_snap_x(float screenX)
