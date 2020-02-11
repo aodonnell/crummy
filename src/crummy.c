@@ -28,9 +28,13 @@ int main(int argc, char *argv[])
     camera.rotation = 0.0f;
     camera.zoom = 1.0f;
 
-    spawn_crumb(world, 0, (Vector2){0, 512}, RockCrumb);
+    // spawn_c÷\rumb(world, 0, (Vector2){0, 512}, RockCrumb);
 
     the_lone_chunk = spawn_chunk(world, (Vector2){0, 0}, NULL);
+    the_lone_chunk = spawn_chunk(world, (Vector2){1, 1}, NULL);
+    the_lone_chunk = spawn_chunk(world, (Vector2){-1, 1}, NULL);
+    the_lone_chunk = spawn_chunk(world, (Vector2){1, -1}, NULL);
+    the_lone_chunk = spawn_chunk(world, (Vector2){-1, -1}, NULL);
 
     spawn_camera_2d(world, (Vector2){WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2}, &camera);
 

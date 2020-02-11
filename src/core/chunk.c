@@ -53,14 +53,12 @@ void write_chunk(Chunk chunk)
 
 void handle_chunk_click(ecs_world_t *world, ecs_entity_t chunkEntity, Chunk *chunkComponent, Vector2 worldPosition)
 {
-    // check to see if the worldPosition falls inside the chunk.
-
     Vector2 chunkPosition = world_to_chunk(worldPosition);
 
     bool sameChunk = (chunkPosition.x == chunkComponent->corner.x && chunkPosition.y == chunkComponent->corner.y);
 
     if (sameChunk)
     {
-        spawn_crumb(world, chunkEntity, world_to_snap(worldPosition), LoudCrumb);
+        spawn_crumb(world, chunkEntity, world_to_snap(worldPosition), PlantCrumb);
     }
 }

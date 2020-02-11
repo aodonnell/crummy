@@ -10,6 +10,7 @@ typedef struct _chunk
 {
     Vector2 corner;
     Crumb *crumbData;
+    Color color;
 } Chunk;
 
 // Vector4 world_to_chunk_position(Vector2 worldPosition);

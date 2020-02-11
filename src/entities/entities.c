@@ -22,7 +22,7 @@ ecs_entity_t spawn_crumb(ecs_world_t *world, ecs_entity_t parentChunk, Vector2 p
 
     ecs_set(world, id, Position, {.x = position.x, .y = position.y});
     ecs_set(world, id, Velocity, {.x = 0, .y = 0});
-    ecs_set(world, id, Crumb, {.flavor = parentChunk ? LoudCrumb : flavor});
+    ecs_set(world, id, Crumb, {.flavor = flavor});
 
     return id;
 }
@@ -48,7 +48,7 @@ ecs_entity_t spawn_chunk(ecs_world_t *world, Vector2 corner, Crumb *crumbData)
 
     ECS_IMPORT(world, CrummyComponents, 0);
 
-    ecs_set(world, id, Chunk, {.crumbData = crumbData, .corner = corner});
+    ecs_set(world, id, Chunk, {.crumbData = crumbData, .corner = corner, .color = rand_tint()});
 
     return id;
 }

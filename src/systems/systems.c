@@ -23,8 +23,6 @@ void CrumbRenderer(ecs_rows_t *rows)
     Position *positions = ecs_column(rows, Position, 1);
     Crumb *crumbs = ecs_column(rows, Crumb, 2);
 
-    Vector2 mousePosition = GetMousePosition();
-
     BeginMode2D(camera);
 
     for (int i = 0; i < rows->count; i++)
@@ -35,6 +33,21 @@ void CrumbRenderer(ecs_rows_t *rows)
     EndMode2D();
 }
 
+void ChunkRenderer(ecs_rows_t *rows)
+{
+    Chunk *chunks = ecs_column(rows, Chunk, 1);
+
+    BeginMode2D(camera);
+
+    int l = CHUNK_SIZE * CRUMB_SIZE;
+
+    for (int i = 0; i < rows->count; i++)
+    {
+        DrawRectangle(chunks[i].corner.x * l, chunks[i].corner.y * l, l, l, chunks[i].color);
+    }
+
+    EndMode2D();
+}
 void CrumbSimulator(ecs_rows_t *rows)
 {
     Position *positions = ecs_column(rows, Position, 1);
@@ -348,6 +361,7 @@ void CrummySystemsImport(ecs_world_t *world, int id)
 
     ECS_SYSTEM(world, Input, EcsOnUpdate, Velocity, Playable);
     ECS_SYSTEM(world, CameraSnapper, EcsOnUpdate, Position, Playable);
+    ECS_SYSTEM(world, ChunkRenderer, EcsOnUpdate, Chunk);
 
     ECS_SYSTEM(world, DebugHud, EcsOnUpdate);
 
