@@ -126,7 +126,7 @@ float chunk_to_world_y(float chunkY)
 Vector2 chunk_to_world(Vector2 chunk)
 {
     chunk.x = chunk_to_world_x(chunk.x);
-    chunk.y = chunk_to_world_x(chunk.y);
+    chunk.y = chunk_to_world_y(chunk.y);
 
     return chunk;
 }
@@ -146,7 +146,7 @@ Vector4 world_to_chunk_and_crumb(Vector2 world)
     x = world_to_chunk_x(world.x);
     y = world_to_chunk_y(world.y);
     z = world_to_crumb_x(world.x - chunk_to_world_x(x));
-    w = world_to_crumb_y(world.y - chunk_to_world_x(y));
+    w = world_to_crumb_y(world.y - chunk_to_world_y(y));
 
     return (Vector4){.x = x, .y = y, .z = z, .w = w};
 }

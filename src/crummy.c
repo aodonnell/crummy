@@ -28,8 +28,8 @@ int main(int argc, char *argv[])
     camera.rotation = 0.0f;
     camera.zoom = 1.0f;
 
-    the_lone_chunk = spawn_chunk(world, (Vector2){0, 0});
-    // ecs_entity_t anotherOne = spawn_chunk(world, (Vector2){1, 1});
+    spawn_chunk(world, (Vector2){0, 0});
+    spawn_chunk(world, (Vector2){1, 1});
 
     // spawn_chunk(world, (Vector2){-1, 1});
     // spawn_chunk(world, (Vector2){1, -1});

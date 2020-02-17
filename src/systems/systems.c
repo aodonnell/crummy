@@ -63,7 +63,7 @@ void CrumbSimulator(ecs_rows_t *rows)
     int swwater = 0;
     int swater = 0;
 
-    float baseSpeed = CRUMB_SIZE / 2;
+    float baseSpeed = CRUMB_SIZE;
 
     Vector2 targetV;
 
@@ -139,9 +139,7 @@ void CrumbSimulator(ecs_rows_t *rows)
                 targetV.y = 0;
             }
 
-            Vector2 v = Vector2Lerp(velocities[i], targetV, 0.5);
-
-            velocities[i] = v;
+            velocities[i] = Vector2Lerp(velocities[i], targetV, 0.5);
             break;
 
         case WaterCrumb:
@@ -208,9 +206,9 @@ void CrumbSimulator(ecs_rows_t *rows)
 void MouseCrumber(ecs_rows_t *rows)
 {
     // Position *positions = ecs_column(rows, Position, 1);
-    // Crumb *crumbs = ecs_column(rows, Crumb, 2);
 
     Chunk *chunk = ecs_column(rows, Chunk, 1);
+    Crumb *crumbs = ecs_column(rows, Crumb, 2);
 
     bool rightDown = IsMouseButtonDown(MOUSE_RIGHT_BUTTON);
     bool leftDown = IsMouseButtonDown(MOUSE_LEFT_BUTTON);
@@ -257,7 +255,7 @@ void MouseCrumber(ecs_rows_t *rows)
 
         if (chunkHere < 0)
         {
-            spawn_crumb(rows->world, rows->entities[0], world_to_snap(worldPosition), SandCrumb);
+            spawn_crumb(rows->world, chunk->id, world_to_snap(worldPosition), SandCrumb);
         }
     }
 }
@@ -369,29 +367,23 @@ void CrumbMover(ecs_rows_t *rows)
     {
         targetPosition.x = positions[i].x + velocities[i].x;
         targetPosition.y = positions[i].y + velocities[i].y;
-        velocities[i].x = 0;
-        velocities[i].y = 0;
 
         chunkPosition = world_to_chunk_and_crumb(targetPosition);
 
         bool sameChunk = chunkPosition.x == chunk->corner.x &&
                          chunkPosition.y == chunk->corner.y;
 
-        if (!sameChunk)
+        if (sameChunk)
         {
-
-            chunkPosition = world_to_chunk_and_crumb(positions[i]);
-        }
-        else
-        {
-            positions[i] = targetPosition;
+            positions[i] = world_to_snap(targetPosition);
         }
 
-        positions[i] = world_to_snap(positions[i]);
+        chunkPosition = world_to_chunk_and_crumb(positions[i]);
 
         // Need to tell the universe where this crumb lands
         set_crumb_on_chunk(chunk, (Vector2){.x = chunkPosition.z, .y = chunkPosition.w}, rows->entities[i]);
     }
+    // chunk_monitor(chunk);
 }
 
 void CameraSnapper(ecs_rows_t *rows)
@@ -411,9 +403,9 @@ void CrummySystemsImport(ecs_world_t *world, int id)
     ECS_SYSTEM(world, ChunkRenderer, EcsOnUpdate, Chunk);
     ECS_SYSTEM(world, CrumbRenderer, EcsOnUpdate, Position, Crumb);
     ECS_SYSTEM(world, CrumbSimulator, EcsOnUpdate, CONTAINER.Chunk, Position, Velocity, Crumb);
-    ECS_SYSTEM(world, MouseCrumber, EcsOnUpdate, Chunk, 0);
     ECS_SYSTEM(world, Mover, EcsOnUpdate, Position, Velocity, Playable, !Crumb);
     ECS_SYSTEM(world, CrumbMover, EcsOnUpdate, CONTAINER.Chunk, Crumb, Position, Velocity);
+    ECS_SYSTEM(world, MouseCrumber, EcsOnUpdate, CONTAINER.Chunk, Crumb, Position, Velocity);
 
     ECS_SYSTEM(world, Input, EcsOnUpdate, Velocity, Playable);
     ECS_SYSTEM(world, CameraSnapper, EcsOnUpdate, Position, Playable);

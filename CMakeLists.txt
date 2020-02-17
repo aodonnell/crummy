@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.11)
 
 project(crummy)
 
+set(CMAKE_BUILD_TYPE Debug)
+
 include_directories(lib/flecs/include)
 include_directories(lib/unqlite/src)
 include_directories(lib/raylib/src)

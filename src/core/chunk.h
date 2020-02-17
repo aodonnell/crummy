@@ -11,13 +11,16 @@ typedef struct _chunk
     Vector2 corner;
     int *crumbData;
     Color color;
+    int id;
 } Chunk;
 
 // Vector4 world_to_chunk_position(Vector2 worldPosition);
 
 void wipe_chunk(Chunk *chunk);
 
-ecs_entity_t get_crumb_on_chunk(Chunk *chunk, Vector2 position);
+void chunk_monitor(Chunk *chunk);
+
+int get_crumb_on_chunk(Chunk *chunk, Vector2 position);
 
 void set_crumb_on_chunk(Chunk *chunk, Vector2 position, ecs_entity_t crumbEntity);
 

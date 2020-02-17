@@ -9,20 +9,15 @@ ecs_entity_t spawn_crumb(ecs_world_t *world, ecs_entity_t parentChunk, Vector2 p
 {
     ecs_entity_t id;
 
-    if (parentChunk)
-    {
-        id = ecs_new_child(world, parentChunk, 0);
-    }
-    else
-    {
-        id = ecs_new(world, 0);
-    }
+    id = ecs_new_child(world, parentChunk, 0);
 
     ECS_IMPORT(world, CrummyComponents, 0);
 
     ecs_set(world, id, Position, {.x = position.x, .y = position.y});
     ecs_set(world, id, Velocity, {.x = 0, .y = 0});
     ecs_set(world, id, Crumb, {.flavor = flavor});
+
+    printf("boom\n");
 
     return id;
 }
@@ -51,8 +46,8 @@ ecs_entity_t spawn_chunk(ecs_world_t *world, Vector2 corner)
     int *data = malloc(CHUNK_SIZE * CHUNK_SIZE * sizeof(int));
     memset(data, -1, CHUNK_SIZE * CHUNK_SIZE * sizeof(int));
 
-    ecs_entity_t crumb = spawn_crumb(world, id, (Vector2){CRUMB_SIZE, CRUMB_SIZE}, SandCrumb);
-    Chunk chunk = {.crumbData = data, .corner = corner, .color = rand_tint()};
+    ecs_entity_t crumb = spawn_crumb(world, id, (Vector2){CRUMB_SIZE + CHUNK_SIZE_PX * corner.x, CRUMB_SIZE + CHUNK_SIZE_PX * corner.y}, WaterCrumb);
+    Chunk chunk = {.crumbData = data, .corner = corner, .color = rand_tint(), .id = id};
 
     set_crumb_on_chunk(&chunk, (Vector2){.x = 1, .y = 1}, crumb);
 

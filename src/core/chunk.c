@@ -12,6 +12,20 @@ void wipe_chunk(Chunk *chunk)
     memset(chunk->crumbData, -1, CHUNK_SIZE * CHUNK_SIZE * sizeof(int));
 }
 
+void chunk_monitor(Chunk *chunk)
+{
+    printf("=============================\n");
+    for (int i = 0; i < CHUNK_SIZE; ++i)
+    {
+        for (int j = 0; j < CHUNK_SIZE; ++j)
+        {
+            printf("%4.d ", get_crumb_on_chunk(chunk, (Vector2){.x = j, .y = i}));
+        }
+        puts("");
+    }
+    printf("=============================\n");
+}
+
 ecs_entity_t chunk_at(Vector2 worldPosition)
 {
     return the_lone_chunk;
@@ -37,14 +51,14 @@ void write_chunk(Chunk chunk)
 {
 }
 
-ecs_entity_t get_crumb_on_chunk(Chunk *chunk, Vector2 position)
+int get_crumb_on_chunk(Chunk *chunk, Vector2 position)
 {
     return chunk->crumbData[crumb_index_from_position(position)];
 }
 
 void set_crumb_on_chunk(Chunk *chunk, Vector2 position, ecs_entity_t crumbEntity)
 {
-    chunk->crumbData[crumb_index_from_position(position)] = crumbEntity;
+    chunk->crumbData[crumb_index_from_position(position)] = (int)crumbEntity;
 }
 
 CrumbNeighborSet get_crumb_neighbor_set(Chunk *chunk, Vector2 position)

@@ -5,9 +5,12 @@
             "name": "debug",
             "type": "cppdbg",
             "request": "launch",
-            "program":"${workspaceRoot}/debug/crummy",
+            "program": "${workspaceRoot}/debug/crummy",
             "cwd": "${workspaceRoot}/debug",
-            "preLaunchTask": "make"
+            "preLaunchTask": "make",
+            "args": [
+                "-g"
+            ]
         }
     ]
 }
