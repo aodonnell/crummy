@@ -10,6 +10,6 @@ ecs_entity_t spawn_crumb(ecs_world_t *world, ecs_entity_t parentChunk, Vector2 p
 
 ecs_entity_t spawn_camera_2d(ecs_world_t *world, Vector2 position, Camera2D *camera);
 
-ecs_entity_t spawn_chunk(ecs_world_t *world, Vector2 corner, Crumb *crumbData);
+ecs_entity_t spawn_chunk(ecs_world_t *world, Vector2 corner);
 
 #endif

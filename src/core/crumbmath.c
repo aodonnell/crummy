@@ -97,12 +97,12 @@ Vector2 world_to_screen(Vector2 world)
 
 float world_to_chunk_x(float worldX)
 {
-    return (int)(worldX - (int)worldX % (int)(CRUMB_SIZE)) / (CHUNK_SIZE * CRUMB_SIZE) - (worldX < 0 ? 1 : 0);
+    return (int)(worldX - (int)worldX % (int)(CRUMB_SIZE)) / (CHUNK_SIZE_PX) - (worldX < 0 ? 1 : 0);
 }
 
 float world_to_chunk_y(float worldY)
 {
-    return (int)(worldY - (int)worldY % (int)(CRUMB_SIZE)) / (CHUNK_SIZE * CRUMB_SIZE) - (worldY < 0 ? 1 : 0);
+    return (int)(worldY - (int)worldY % (int)(CRUMB_SIZE)) / (CHUNK_SIZE_PX) - (worldY < 0 ? 1 : 0);
 }
 
 Vector2 world_to_chunk(Vector2 world)
@@ -115,12 +115,12 @@ Vector2 world_to_chunk(Vector2 world)
 
 float chunk_to_world_x(float chunkX)
 {
-    return chunkX * CHUNK_SIZE * CRUMB_SIZE;
+    return chunkX * CHUNK_SIZE_PX;
 }
 
 float chunk_to_world_y(float chunkY)
 {
-    return chunkY * CHUNK_SIZE * CRUMB_SIZE;
+    return chunkY * CHUNK_SIZE_PX;
 }
 
 Vector2 chunk_to_world(Vector2 chunk)
@@ -133,6 +133,14 @@ Vector2 chunk_to_world(Vector2 chunk)
 
 Vector4 world_to_chunk_and_crumb(Vector2 world)
 {
+    // <---> crumbs
+    //  _________
+    // |c00 |c01 |
+    // |____|____|
+    // |c10 |c11 |
+    // |____|____|
+    // <---------> pixels
+
     int x, y, z, w;
 
     x = world_to_chunk_x(world.x);
@@ -159,6 +167,11 @@ Vector2 screen_to_snap(Vector2 screen)
     screen.y = screen_to_snap_y(screen.y);
 
     return screen;
+}
+
+int crumb_index_from_position(Vector2 position)
+{
+    return (int)(position.y * CRUMB_SIZE + position.x);
 }
 
 int rand_in_range(int low, int high)

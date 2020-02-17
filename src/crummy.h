@@ -4,6 +4,7 @@
 #include <raylib.h>
 #include <flecs.h>
 #include <unqlite.h>
+#include <core.h>
 
 #define WINDOW_HEIGHT_PX 720
 #define WINDOW_WIDTH_PX 1080
@@ -25,5 +26,7 @@ Camera2D camera;
 extern char *universe;
 
 ecs_entity_t the_lone_chunk;
+
+CrumbFlavor selectedFlavor;
 
 #endif

@@ -42,13 +42,21 @@ ecs_entity_t spawn_camera_2d(ecs_world_t *world, Vector2 position, Camera2D *cam
     return id;
 }
 
-ecs_entity_t spawn_chunk(ecs_world_t *world, Vector2 corner, Crumb *crumbData)
+ecs_entity_t spawn_chunk(ecs_world_t *world, Vector2 corner)
 {
     ecs_entity_t id = ecs_new(world, 0);
 
     ECS_IMPORT(world, CrummyComponents, 0);
 
-    ecs_set(world, id, Chunk, {.crumbData = crumbData, .corner = corner, .color = rand_tint()});
+    int *data = malloc(CHUNK_SIZE * CHUNK_SIZE * sizeof(int));
+    memset(data, -1, CHUNK_SIZE * CHUNK_SIZE * sizeof(int));
+
+    ecs_entity_t crumb = spawn_crumb(world, id, (Vector2){CRUMB_SIZE, CRUMB_SIZE}, SandCrumb);
+    Chunk chunk = {.crumbData = data, .corner = corner, .color = rand_tint()};
+
+    set_crumb_on_chunk(&chunk, (Vector2){.x = 1, .y = 1}, crumb);
+
+    ecs_set_ptr(world, id, Chunk, &chunk);
 
     return id;
 }

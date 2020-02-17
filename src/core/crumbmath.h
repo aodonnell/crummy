@@ -55,6 +55,8 @@ float screen_to_snap_y(float screenY);
 
 Vector2 screen_to_snap(Vector2 screen);
 
+int crumb_index_from_position(Vector2 position);
+
 int rand_in_range(int low, int high);
 
 double rand01();

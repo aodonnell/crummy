@@ -9,14 +9,22 @@
 typedef struct _chunk
 {
     Vector2 corner;
-    Crumb *crumbData;
+    int *crumbData;
     Color color;
 } Chunk;
 
 // Vector4 world_to_chunk_position(Vector2 worldPosition);
 
+void wipe_chunk(Chunk *chunk);
+
+ecs_entity_t get_crumb_on_chunk(Chunk *chunk, Vector2 position);
+
+void set_crumb_on_chunk(Chunk *chunk, Vector2 position, ecs_entity_t crumbEntity);
+
+CrumbNeighborSet get_crumb_neighbor_set(Chunk *chunk, Vector2 position);
+
 ecs_entity_t chunk_at(Vector2 worldPosition);
 
-void handle_chunk_click(ecs_world_t *world, ecs_entity_t chunkEntity, Chunk *chunkComponent, Vector2 worldPosition);
+void handle_chunk_click(ecs_rows_t *rows, ecs_entity_t chunkEntity, Chunk *chunkComponent, Vector2 worldPosition);
 
 #endif

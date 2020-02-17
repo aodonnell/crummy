@@ -28,15 +28,14 @@ int main(int argc, char *argv[])
     camera.rotation = 0.0f;
     camera.zoom = 1.0f;
 
-    // spawn_c÷\rumb(world, 0, (Vector2){0, 512}, RockCrumb);
+    the_lone_chunk = spawn_chunk(world, (Vector2){0, 0});
+    // ecs_entity_t anotherOne = spawn_chunk(world, (Vector2){1, 1});
 
-    the_lone_chunk = spawn_chunk(world, (Vector2){0, 0}, NULL);
-    the_lone_chunk = spawn_chunk(world, (Vector2){1, 1}, NULL);
-    the_lone_chunk = spawn_chunk(world, (Vector2){-1, 1}, NULL);
-    the_lone_chunk = spawn_chunk(world, (Vector2){1, -1}, NULL);
-    the_lone_chunk = spawn_chunk(world, (Vector2){-1, -1}, NULL);
-    the_lone_chunk = spawn_chunk(world, (Vector2){-2, 0}, NULL);
-    the_lone_chunk = spawn_chunk(world, (Vector2){0, -2}, NULL);
+    // spawn_chunk(world, (Vector2){-1, 1});
+    // spawn_chunk(world, (Vector2){1, -1});
+    // spawn_chunk(world, (Vector2){-1, -1});
+    // spawn_chunk(world, (Vector2){-2, 0});
+    // spawn_chunk(world, (Vector2){0, -2});
 
     spawn_camera_2d(world, (Vector2){WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2}, &camera);
 
@@ -44,9 +43,9 @@ int main(int argc, char *argv[])
 
     while (!WindowShouldClose() && ecs_progress(world, 0))
     {
+        BeginDrawing();
         EndDrawing();
         ClearBackground(DUSK);
-        BeginDrawing();
     }
 
     ecs_fini(world);
@@ -63,4 +62,6 @@ void init()
     ToggleFullscreen();
 
     FontAlagard = LoadFont("assets/alagard.png");
+
+    selectedFlavor = RockCrumb;
 }
