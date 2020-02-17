@@ -67,26 +67,15 @@ void CrumbSimulator(ecs_rows_t *rows)
 
     Vector2 targetV;
 
+    printf("crumbs: %d\n", rows->count);
+
     for (int i = 0; i < rows->count; i++)
     {
         Vector4 chunkPosition = world_to_chunk_and_crumb(positions[i]);
 
-        bool sameChunk = chunkPosition.x == chunk->corner.x &&
-                         chunkPosition.y == chunk->corner.y;
-
-        if (!sameChunk)
-        {
-            printf("crumb fell out! corner.x: %.1f, corner.y: %.1f, chunkPosition.x: %.1f, chunkPosition.x: %.1f\n", chunk->corner.x, chunk->corner.y, chunkPosition.x, chunkPosition.y);
-            velocities[i].x = 0;
-            velocities[i].y = 0;
-            return;
-        }
-
         set = get_crumb_neighbor_set(chunk, (Vector2){.x = chunkPosition.z, .y = chunkPosition.w});
 
-        printf("set: %d, %d, %d, %d, %d, %d, %d, %d\n", set.n, set.ne, set.e, set.se, set.s, set.sw, set.w, set.nw);
-
-        printf("Flavor: %d\n", crumbs[i].flavor);
+        // printf("set: %d, %d, %d, %d, %d, %d, %d, %d\n", set.n, set.ne, set.e, set.se, set.s, set.sw, set.w, set.nw);
 
         switch (crumbs[i].flavor)
         {
@@ -150,12 +139,7 @@ void CrumbSimulator(ecs_rows_t *rows)
                 targetV.y = 0;
             }
 
-            targetV.x = 0;
-            targetV.y = baseSpeed;
-
             Vector2 v = Vector2Lerp(velocities[i], targetV, 0.5);
-
-            printf("crumb going: %.2f, %.2f\n", v.x, v.y);
 
             velocities[i] = v;
             break;
@@ -226,10 +210,21 @@ void MouseCrumber(ecs_rows_t *rows)
     // Position *positions = ecs_column(rows, Position, 1);
     // Crumb *crumbs = ecs_column(rows, Crumb, 2);
 
-    Chunk *chunks = ecs_column(rows, Chunk, 1);
+    Chunk *chunk = ecs_column(rows, Chunk, 1);
 
     bool rightDown = IsMouseButtonDown(MOUSE_RIGHT_BUTTON);
     bool leftDown = IsMouseButtonDown(MOUSE_LEFT_BUTTON);
+
+    Vector2 mousePosition = GetMousePosition();
+
+    Vector2 worldPosition = screen_to_world(mousePosition);
+
+    Vector4 chunkAndCrumb = world_to_chunk_and_crumb(worldPosition);
+
+    if (chunkAndCrumb.x != chunk->corner.x || chunkAndCrumb.y != chunk->corner.y)
+    {
+        return;
+    }
 
     CrumbFlavor crumbType = VoidCrumb;
 
@@ -258,7 +253,12 @@ void MouseCrumber(ecs_rows_t *rows)
 
     if (crumbType != VoidCrumb)
     {
-        Vector2 mousePosition = GetMousePosition();
+        int chunkHere = get_crumb_on_chunk(chunk, (Vector2){.x = chunkAndCrumb.z, .y = chunkAndCrumb.w});
+
+        if (chunkHere < 0)
+        {
+            spawn_crumb(rows->world, rows->entities[0], world_to_snap(worldPosition), SandCrumb);
+        }
     }
 }
 
@@ -360,17 +360,34 @@ void CrumbMover(ecs_rows_t *rows)
     // should chunk mechanics just go here?
     Vector4 chunkPosition;
 
+    Vector2 targetPosition;
+
     // Chunks are empty to begin with
     wipe_chunk(chunk);
 
     for (int i = 0; i < rows->count; i++)
     {
-        positions[i].x += velocities[i].x;
-        positions[i].y += velocities[i].y;
+        targetPosition.x = positions[i].x + velocities[i].x;
+        targetPosition.y = positions[i].y + velocities[i].y;
+        velocities[i].x = 0;
+        velocities[i].y = 0;
 
-        chunkPosition = world_to_chunk_and_crumb(positions[i]);
+        chunkPosition = world_to_chunk_and_crumb(targetPosition);
 
-        // TODO if(chunkPosition.x != chunk->cornner.x || chunkPosition.y != chunk->cornner.y){need to pass the crumb to a different parent}
+        bool sameChunk = chunkPosition.x == chunk->corner.x &&
+                         chunkPosition.y == chunk->corner.y;
+
+        if (!sameChunk)
+        {
+
+            chunkPosition = world_to_chunk_and_crumb(positions[i]);
+        }
+        else
+        {
+            positions[i] = targetPosition;
+        }
+
+        positions[i] = world_to_snap(positions[i]);
 
         // Need to tell the universe where this crumb lands
         set_crumb_on_chunk(chunk, (Vector2){.x = chunkPosition.z, .y = chunkPosition.w}, rows->entities[i]);

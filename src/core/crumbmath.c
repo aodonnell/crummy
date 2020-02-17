@@ -171,7 +171,7 @@ Vector2 screen_to_snap(Vector2 screen)
 
 int crumb_index_from_position(Vector2 position)
 {
-    return (int)(position.y * CRUMB_SIZE + position.x);
+    return ((int)position.y * CRUMB_SIZE + (int)position.x);
 }
 
 int rand_in_range(int low, int high)
