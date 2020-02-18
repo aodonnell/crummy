@@ -74,7 +74,6 @@ void CrumbSimulator(ecs_rows_t *rows)
         Vector4 chunkPosition = world_to_chunk_and_crumb(positions[i]);
 
         set = get_crumb_neighbor_set(chunk, (Vector2){.x = chunkPosition.z, .y = chunkPosition.w});
-
         // printf("set: %d, %d, %d, %d, %d, %d, %d, %d\n", set.n, set.ne, set.e, set.se, set.s, set.sw, set.w, set.nw);
 
         switch (crumbs[i].flavor)
@@ -83,33 +82,6 @@ void CrumbSimulator(ecs_rows_t *rows)
             // XXX delete the crumb if it was set to void?
             break;
         case SandCrumb:
-
-            // sewater = (crumbs[se].flavor == WaterCrumb);
-            // swwater = (crumbs[sw].flavor == WaterCrumb);
-            // swater = (crumbs[s].flavor == WaterCrumb);
-
-            // if((se >= 0 && (sewater))       \
-                //     || (sw >= 0 && (swwater))   \
-                //     || (s >= 0 && (swater)))    \
-                // {
-
-            //     crumbs[i].flavor = WaterCrumb;
-
-            //     if(swater)
-            //     {
-            //         crumbs[s].flavor = SandCrumb;
-            //     }
-            //     else if((sewater && swwater && rand01() < 0.5) || (sewater && !swwater))
-            //     {
-            //         crumbs[se].flavor = SandCrumb;
-            //     }
-            //     else
-            //     {
-            //         crumbs[s].flavor = SandCrumb;
-            //     }
-
-            //     break;
-            // }
 
             set.e = set.e < 0;
             set.w = set.w < 0;
@@ -139,7 +111,8 @@ void CrumbSimulator(ecs_rows_t *rows)
                 targetV.y = 0;
             }
 
-            velocities[i] = Vector2Lerp(velocities[i], targetV, 0.5);
+            velocities[i] = targetV;
+            // velocities[i] = Vector2Lerp(velocities[i], targetV, 0.5);
             break;
 
         case WaterCrumb:
@@ -191,9 +164,13 @@ void CrumbSimulator(ecs_rows_t *rows)
             {
                 targetV.x = 0;
                 targetV.y = 0;
+
+                velocities[i] = targetV;
             }
 
             velocities[i] = Vector2Lerp(velocities[i], targetV, 0.5);
+
+            velocities[i] = targetV;
 
             break;
 
@@ -251,11 +228,11 @@ void MouseCrumber(ecs_rows_t *rows)
 
     if (crumbType != VoidCrumb)
     {
-        int chunkHere = get_crumb_on_chunk(chunk, (Vector2){.x = chunkAndCrumb.z, .y = chunkAndCrumb.w});
+        int crumbHere = get_crumb_on_chunk(chunk, (Vector2){.x = chunkAndCrumb.z, .y = chunkAndCrumb.w});
 
-        if (chunkHere < 0)
+        if (crumbHere < 0)
         {
-            spawn_crumb(rows->world, chunk->id, world_to_snap(worldPosition), SandCrumb);
+            spawn_crumb(rows->world, chunk->id, world_to_snap(worldPosition), crumbType);
         }
     }
 }
@@ -369,13 +346,14 @@ void CrumbMover(ecs_rows_t *rows)
         targetPosition.y = positions[i].y + velocities[i].y;
 
         chunkPosition = world_to_chunk_and_crumb(targetPosition);
-
         bool sameChunk = chunkPosition.x == chunk->corner.x &&
                          chunkPosition.y == chunk->corner.y;
 
         if (sameChunk)
         {
-            positions[i] = world_to_snap(targetPosition);
+            positions[i] = targetPosition;
+
+            positions[i] = world_to_snap(positions[i]);
         }
 
         chunkPosition = world_to_chunk_and_crumb(positions[i]);
@@ -402,9 +380,9 @@ void CrummySystemsImport(ecs_world_t *world, int id)
 
     ECS_SYSTEM(world, ChunkRenderer, EcsOnUpdate, Chunk);
     ECS_SYSTEM(world, CrumbRenderer, EcsOnUpdate, Position, Crumb);
+    ECS_SYSTEM(world, CrumbMover, EcsOnUpdate, CONTAINER.Chunk, Crumb, Position, Velocity);
     ECS_SYSTEM(world, CrumbSimulator, EcsOnUpdate, CONTAINER.Chunk, Position, Velocity, Crumb);
     ECS_SYSTEM(world, Mover, EcsOnUpdate, Position, Velocity, Playable, !Crumb);
-    ECS_SYSTEM(world, CrumbMover, EcsOnUpdate, CONTAINER.Chunk, Crumb, Position, Velocity);
     ECS_SYSTEM(world, MouseCrumber, EcsOnUpdate, CONTAINER.Chunk, Crumb, Position, Velocity);
 
     ECS_SYSTEM(world, Input, EcsOnUpdate, Velocity, Playable);

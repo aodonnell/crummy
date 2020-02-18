@@ -44,12 +44,12 @@ ecs_entity_t spawn_chunk(ecs_world_t *world, Vector2 corner)
     ECS_IMPORT(world, CrummyComponents, 0);
 
     int *data = malloc(CHUNK_SIZE * CHUNK_SIZE * sizeof(int));
-    memset(data, -1, CHUNK_SIZE * CHUNK_SIZE * sizeof(int));
-
-    ecs_entity_t crumb = spawn_crumb(world, id, (Vector2){CRUMB_SIZE + CHUNK_SIZE_PX * corner.x, CRUMB_SIZE + CHUNK_SIZE_PX * corner.y}, WaterCrumb);
     Chunk chunk = {.crumbData = data, .corner = corner, .color = rand_tint(), .id = id};
 
-    set_crumb_on_chunk(&chunk, (Vector2){.x = 1, .y = 1}, crumb);
+    wipe_chunk(&chunk);
+
+    ecs_entity_t crumb = spawn_crumb(world, id, (Vector2){CRUMB_SIZE + CHUNK_SIZE_PX * corner.x, CRUMB_SIZE + CHUNK_SIZE_PX * corner.y}, RockCrumb);
+    set_crumb_on_chunk(&chunk, (Vector2){.x = 1, .y = 1}, (int)crumb);
 
     ecs_set_ptr(world, id, Chunk, &chunk);
 

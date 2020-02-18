@@ -22,7 +22,7 @@ void chunk_monitor(Chunk *chunk);
 
 int get_crumb_on_chunk(Chunk *chunk, Vector2 position);
 
-void set_crumb_on_chunk(Chunk *chunk, Vector2 position, ecs_entity_t crumbEntity);
+void set_crumb_on_chunk(Chunk *chunk, Vector2 position, int crumbEntity);
 
 CrumbNeighborSet get_crumb_neighbor_set(Chunk *chunk, Vector2 position);
 

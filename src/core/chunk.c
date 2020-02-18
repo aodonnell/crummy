@@ -56,23 +56,61 @@ int get_crumb_on_chunk(Chunk *chunk, Vector2 position)
     return chunk->crumbData[crumb_index_from_position(position)];
 }
 
-void set_crumb_on_chunk(Chunk *chunk, Vector2 position, ecs_entity_t crumbEntity)
+void set_crumb_on_chunk(Chunk *chunk, Vector2 position, int crumbEntity)
 {
-    chunk->crumbData[crumb_index_from_position(position)] = (int)crumbEntity;
+    chunk->crumbData[crumb_index_from_position(position)] = crumbEntity;
 }
 
 CrumbNeighborSet get_crumb_neighbor_set(Chunk *chunk, Vector2 position)
 {
     CrumbNeighborSet set;
 
-    set.n = get_crumb_on_chunk(chunk, (Vector2){.x = position.x, .y = position.y - 1});
-    set.ne = get_crumb_on_chunk(chunk, (Vector2){.x = position.x + 1, .y = position.y - 1});
-    set.e = get_crumb_on_chunk(chunk, (Vector2){.x = position.x + 1, .y = position.y});
-    set.se = get_crumb_on_chunk(chunk, (Vector2){.x = position.x + 1, .y = position.y + 1});
-    set.s = get_crumb_on_chunk(chunk, (Vector2){.x = position.x, .y = position.y + 1});
-    set.sw = get_crumb_on_chunk(chunk, (Vector2){.x = position.x - 1, .y = position.y + 1});
-    set.w = get_crumb_on_chunk(chunk, (Vector2){.x = position.x - 1, .y = position.y});
-    set.nw = get_crumb_on_chunk(chunk, (Vector2){.x = position.x - 1, .y = position.y - 1});
+    set.n = -1;
+    set.ne = -1;
+    set.se = -1;
+    set.s = -1;
+    set.e = -1;
+    set.sw = -1;
+    set.w = -1;
+    set.nw = -1;
+
+    int bounds = CHUNK_SIZE;
+
+    // Cardinal
+    if (position.x > 0)
+    {
+        set.w = get_crumb_on_chunk(chunk, (Vector2){.x = position.x - 1, .y = position.y});
+    }
+    if (position.y > 0)
+    {
+        set.n = get_crumb_on_chunk(chunk, (Vector2){.x = position.x, .y = position.y - 1});
+    }
+    if (position.x < bounds)
+    {
+        set.e = get_crumb_on_chunk(chunk, (Vector2){.x = position.x + 1, .y = position.y});
+    }
+    if (position.y < bounds)
+    {
+        set.s = get_crumb_on_chunk(chunk, (Vector2){.x = position.x, .y = position.y + 1});
+    }
+
+    // Ordinal
+    if (position.x > 0 && position.y > 0)
+    {
+        set.ne = get_crumb_on_chunk(chunk, (Vector2){.x = position.x + 1, .y = position.y - 1});
+    }
+    if (position.x < bounds && position.y > 0)
+    {
+        set.nw = get_crumb_on_chunk(chunk, (Vector2){.x = position.x - 1, .y = position.y - 1});
+    }
+    if (position.x > 0 && position.y < bounds)
+    {
+        set.sw = get_crumb_on_chunk(chunk, (Vector2){.x = position.x - 1, .y = position.y + 1});
+    }
+    if (position.y < bounds && position.y < bounds)
+    {
+        set.se = get_crumb_on_chunk(chunk, (Vector2){.x = position.x + 1, .y = position.y + 1});
+    }
 
     return set;
 };
@@ -92,7 +130,7 @@ void handle_chunk_click(ecs_rows_t *rows, ecs_entity_t chunkEntity, Chunk *chunk
         {
             ECS_COLUMN_COMPONENT(rows, Crumb, 1);
 
-            Crumb *crumb = rows->columns;
+            Crumb *crumb; // = rows->columns;
 
             if (crumb != NULL)
             {
